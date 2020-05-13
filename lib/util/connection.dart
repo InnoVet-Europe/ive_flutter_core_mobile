@@ -2,7 +2,7 @@ import 'dart:core';
 
 import 'package:flutter/material.dart';
 
-import 'package:ive_flutter_core/util/core_utilities.dart';
+import 'package:ive_flutter_core_mobile/util/core_mobile_utilities.dart';
 
 abstract class Enum<T> {
   const Enum(this._value);
@@ -41,11 +41,9 @@ class Connection {
     );
   }
 
-
-
   static bool checkForConnection(BuildContext context, {String title, String message}) {
     if (globalConnectionStatus == connectionStatus_notConnected) {
-      CoreUtilities.showAlert(context, title ?? 'Offline mode', message ?? 'This feature is not available in offline mode. Please connect to the internet to use this feature', 'OK');
+      CoreMoblieUtilities.showAlert(context, title ?? 'Offline mode', message ?? 'This feature is not available in offline mode. Please connect to the internet to use this feature', 'OK');
     }
     return globalConnectionStatus == connectionStatus_connected;
   }
