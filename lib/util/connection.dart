@@ -43,7 +43,7 @@ class Connection {
 
   static bool checkForConnection(BuildContext context, {String title, String message}) {
     if (globalConnectionStatus == connectionStatus_notConnected) {
-      CoreMoblieUtilities.showAlert(context, title ?? 'Offline mode', message ?? 'This feature is not available in offline mode. Please connect to the internet to use this feature', 'OK');
+      CoreMobileUtilities.showAlert(context, title ?? 'Offline mode', message ?? 'This feature is not available in offline mode. Please connect to the internet to use this feature', 'OK');
     }
     return globalConnectionStatus == connectionStatus_connected;
   }

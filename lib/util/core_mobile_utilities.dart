@@ -8,7 +8,7 @@ import 'package:intl/intl.dart';
 
 import 'package:crypto/crypto.dart';
 
-class CoreMoblieUtilities {
+class CoreMobileUtilities {
     static Future<bool> showAlert(BuildContext context, String title, String body, String buttonText, {bool showCancelButton = false, String cancelButtonText = 'Cancel',TextAlign textAlign = TextAlign.justify}) async {
     return showDialog<bool>(
       context: context,
