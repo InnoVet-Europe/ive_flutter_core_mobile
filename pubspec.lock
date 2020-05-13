@@ -248,19 +248,12 @@ packages:
     source: hosted
     version: "3.1.4"
   intl:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: intl
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.16.1"
-  intl_translation:
-    dependency: "direct dev"
-    description:
-      name: intl_translation
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "0.17.10"
   io:
     dependency: transitive
     description:
@@ -268,6 +261,15 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.3.4"
+  ive_flutter_core:
+    dependency: "direct main"
+    description:
+      path: "."
+      ref: ef06ad935d79991bcad62c8c945d39e9eeae330f
+      resolved-ref: ef06ad935d79991bcad62c8c945d39e9eeae330f
+      url: "git://github.com/InnoVet-Europe/ive_flutter_core.git"
+    source: git
+    version: "1.0.7"
   js:
     dependency: transitive
     description:
@@ -380,13 +382,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.9.0"
-  petitparser:
-    dependency: transitive
-    description:
-      name: petitparser
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "3.0.2"
   photo_view:
     dependency: "direct main"
     description:

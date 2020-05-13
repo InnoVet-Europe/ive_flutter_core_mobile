@@ -2,7 +2,7 @@ import 'dart:core';
 
 import 'package:flutter/material.dart';
 
-import 'package:ive_flutter_core_mobile/util/core_utilities.dart';
+import 'package:ive_flutter_core/util/core_utilities.dart';
 
 abstract class Enum<T> {
   const Enum(this._value);
