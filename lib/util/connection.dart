@@ -1,4 +1,5 @@
 import 'dart:core';
+import 'dart:io';
 
 import 'package:flutter/material.dart';
 
@@ -20,6 +21,22 @@ const EnumConnectionStatus<int> connectionStatus_connected = EnumConnectionStatu
 EnumConnectionStatus<int> globalConnectionStatus;
 
 class Connection {
+
+  static Future<bool> checkInternetConnection() async {
+    bool connected = false;
+    try {
+      final List<InternetAddress> result = await InternetAddress.lookup('google.com');
+      if (result.isNotEmpty && result[0].rawAddress.isNotEmpty) {
+        print('connected');
+        connected = true;
+      }
+    } on SocketException catch (_) {
+      print('not connected');
+      connected = false;
+    }
+    return connected;
+  }
+  
   static Widget styleForConnected(Widget w, {num borderRadius = 0.0}) {
     return Container(
       foregroundDecoration: globalConnectionStatus == connectionStatus_connected
