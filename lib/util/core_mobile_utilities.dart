@@ -10,6 +10,10 @@ import 'package:crypto/crypto.dart';
 
 class IveCoreMobileUtilities {
     static Future<bool> showAlert(BuildContext context, String title, String body, String buttonText, {bool showCancelButton = false, String cancelButtonText = 'Cancel',TextAlign textAlign = TextAlign.justify}) async {
+    if (context == null)
+    {
+      return null;
+    }
     return showDialog<bool>(
       context: context,
       barrierDismissible: false, // user must tap button!
