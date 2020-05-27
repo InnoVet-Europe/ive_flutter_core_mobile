@@ -31,6 +31,8 @@ class DBProvider {
       MigrationsTableHelper.doDatabaseMigrations(db, migrations, oldVersion, dbVersion);
     }, onCreate: (Database db, int version) async {
       await createTables(db, version, informUser);
+    }, onConfigure: (Database db) async {
+      await db.execute('PRAGMA cache_size=1000000');
     });
   }
 }
