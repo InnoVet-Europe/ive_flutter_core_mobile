@@ -32,7 +32,7 @@ class DBProvider {
     }, onCreate: (Database db, int version) async {
       await createTables(db, version, informUser);
     }, onConfigure: (Database db) async {
-      await db.execute('PRAGMA cache_size=1000000');
+      await db.execute('PRAGMA cache_size=1500000');
     });
   }
 }

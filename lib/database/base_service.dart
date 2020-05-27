@@ -74,80 +74,81 @@ class BaseService {
 
     int lastPercentage = 0;
 
-    await db.transaction<dynamic>((Transaction txn) async {
-      for (int i = 0; i < jsonResultSets.length; i++) {
-        final List<dynamic> jsonResults = jsonResultSets[i];
-        print('$tableName results received from cloud = ${jsonResults.length}');
+    Batch batch = db.batch();
 
-        for (int j = 0; j < jsonResults.length; j++) {
-          Map<String, dynamic> jsonItem = jsonResults[j];
+    for (int i = 0; i < jsonResultSets.length; i++) {
+      final List<dynamic> jsonResults = jsonResultSets[i];
+      print('$tableName results received from cloud = ${jsonResults.length}');
 
-          if (doNormalizeMap == null) {
-            final Map<String, dynamic> testMap = tableHelper.normalizeMap(jsonItem);
-            doNormalizeMap = testMap.length != jsonItem.length;
-            if (doNormalizeMap) {
-              print('Normalize map called for $tableName, # of fields on the wire = ${jsonItem.length}, # of fields in internal DB = ${testMap.length}');
-              for (int i = 0; i < jsonItem.length; i++) {
-                final String key = jsonItem.keys.elementAt(i);
-                if (!testMap.containsKey(key)) {
-                  print('$key field is on the wire but not in the internal database');
-                }
-              }
+      for (int j = 0; j < jsonResults.length; j++) {
+        Map<String, dynamic> jsonItem = jsonResults[j];
 
-              for (int i = 0; i < testMap.length; i++) {
-                final String key = testMap.keys.elementAt(i);
-                if (!jsonItem.containsKey(key)) {
-                  print('$key field is in the internal database but not on the wire');
-                }
-              }
-            }
-          }
-
-          final int percentage = (100 * (j / jsonResults.length)).round();
-
-          if ((percentage != lastPercentage) && (informUser != null)) {
-            lastPercentage = percentage;
-            informUser('Loading $tableName data\r\n$percentage% complete');
-          }
-
-          // important: make sure to normalize the map before adding the updatedAtValue!
+        if (doNormalizeMap == null) {
+          final Map<String, dynamic> testMap = tableHelper.normalizeMap(jsonItem);
+          doNormalizeMap = testMap.length != jsonItem.length;
           if (doNormalizeMap) {
-            jsonItem = tableHelper.normalizeMap(jsonItem);
-          }
-
-          jsonItem.addAll(<String, dynamic>{
-            'updatedAtValue': DateTime.parse(jsonItem['updatedAt'].toString().substring(0, 19)).millisecondsSinceEpoch,
-          });
-
-          final String query = 'SELECT id FROM $tableName WHERE ${tableHelper.remoteDbId} = "${jsonItem[tableHelper.remoteDbId]}"';
-          final List<Map<String, dynamic>> table = await db.rawQuery(query);
-
-          if ((jsonResults[j]['removed'] ?? 0) == 0) {
-            if (jsonResults[j]['removed'] == null) {
-              print('$tableName should implement a removed field');
+            print('Normalize map called for $tableName, # of fields on the wire = ${jsonItem.length}, # of fields in internal DB = ${testMap.length}');
+            for (int i = 0; i < jsonItem.length; i++) {
+              final String key = jsonItem.keys.elementAt(i);
+              if (!testMap.containsKey(key)) {
+                print('$key field is on the wire but not in the internal database');
+              }
             }
 
-            if ((table == null) || (table.isEmpty)) {
-              await txn.insert(tableName, jsonItem);
-              insertCounter++;
-            } else {
-              final String rowId = table.first['id'].toString();
-
-              await txn.update(tableName, jsonItem, where: 'id = $rowId');
-              updateCounter++;
-            }
-          } else {
-            if ((table != null) && (table.isNotEmpty)) {
-              final String rowId = table.first['id'].toString();
-              if ((rowId != null) && (rowId.isNotEmpty)) {
-                await txn.delete(tableName, where: 'id = $rowId');
-                deletedCounter++;
+            for (int i = 0; i < testMap.length; i++) {
+              final String key = testMap.keys.elementAt(i);
+              if (!jsonItem.containsKey(key)) {
+                print('$key field is in the internal database but not on the wire');
               }
             }
           }
         }
+
+        final int percentage = (100 * (j / jsonResults.length)).round();
+
+        if ((percentage != lastPercentage) && (informUser != null)) {
+          lastPercentage = percentage;
+          informUser('Loading $tableName data\r\n$percentage% complete');
+        }
+
+        // important: make sure to normalize the map before adding the updatedAtValue!
+        if (doNormalizeMap) {
+          jsonItem = tableHelper.normalizeMap(jsonItem);
+        }
+
+        jsonItem.addAll(<String, dynamic>{
+          'updatedAtValue': DateTime.parse(jsonItem['updatedAt'].toString().substring(0, 19)).millisecondsSinceEpoch,
+        });
+
+        final String query = 'SELECT id FROM $tableName WHERE ${tableHelper.remoteDbId} = "${jsonItem[tableHelper.remoteDbId]}"';
+        final List<Map<String, dynamic>> table = await db.rawQuery(query);
+
+        if ((jsonResults[j]['removed'] ?? 0) == 0) {
+          if (jsonResults[j]['removed'] == null) {
+            print('$tableName should implement a removed field');
+          }
+
+          if ((table == null) || (table.isEmpty)) {
+            batch.insert(tableName, jsonItem);
+            insertCounter++;
+          } else {
+            final String rowId = table.first['id'].toString();
+
+            batch.update(tableName, jsonItem, where: 'id = $rowId');
+            updateCounter++;
+          }
+        } else {
+          if ((table != null) && (table.isNotEmpty)) {
+            final String rowId = table.first['id'].toString();
+            if ((rowId != null) && (rowId.isNotEmpty)) {
+              batch.delete(tableName, where: 'id = $rowId');
+              deletedCounter++;
+            }
+          }
+        }
       }
-    });
+    }
+    await batch.commit(noResult: true);
 
     print('$insertCounter $tableName records inserted, $updateCounter $tableName records updated, $deletedCounter $tableName records deleted');
     return insertCounter;
