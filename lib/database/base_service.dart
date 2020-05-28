@@ -9,7 +9,7 @@ class BaseModel {
   Map<String, dynamic> toJson() => null;
 }
 
-class BaseTableHelper with BaseFields {
+abstract class BaseTableHelper with BaseFields {
   BaseTableHelper({this.cacheDuration = 365 * 3 * 86400000});
 
   String remoteDbId;
