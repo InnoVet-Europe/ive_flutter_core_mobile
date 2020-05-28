@@ -9,7 +9,7 @@ class BaseModel {
   Map<String, dynamic> toJson() => null;
 }
 
-abstract class BaseTableHelper with BaseFields {
+abstract class BaseTableHelper {
   BaseTableHelper({this.cacheDuration = 365 * 3 * 86400000});
 
   String remoteDbId;
@@ -19,7 +19,7 @@ abstract class BaseTableHelper with BaseFields {
   Future<void> createTable(Database db, int version, dynamic appDomainType) async => null;
   Future<void> createIndexes(Database db, int version, dynamic appDomainType) async {
     await db.execute('CREATE INDEX idx_${getTableName(appDomainType)}_id ON ${getTableName(appDomainType)}($remoteDbId);');
-    await db.execute('CREATE INDEX idx_${getTableName(appDomainType)}_update_at_value ON ${getTableName(appDomainType)}($colUpdatedAtValue);');
+    await db.execute('CREATE INDEX idx_${getTableName(appDomainType)}_update_at_value ON ${getTableName(appDomainType)}(updatedAtValue);');
   }
 
   Map<String, dynamic> normalizeMap(Map<String, dynamic> inputMap) => null;
