@@ -17,10 +17,12 @@ abstract class BaseTableHelper {
 
   String getTableName(dynamic appDomainType) => null;
   Future<void> createTable(Database db, int version, dynamic appDomainType) async => null;
-  Future<void> createIndexes(Database db, int version, dynamic appDomainType) async {
-    await db.execute('CREATE INDEX idx_${getTableName(appDomainType)}_id ON ${getTableName(appDomainType)}($remoteDbId);');
-    await db.execute('CREATE INDEX idx_${getTableName(appDomainType)}_update_at_value ON ${getTableName(appDomainType)}(updatedAtValue);');
-  }
+  Future<void> createIndexes(Database db, int version, dynamic appDomainType) async => null;
+
+  // Future<void> createIndexes(Database db, int version, dynamic appDomainType) async {
+  //   await db.execute('CREATE INDEX idx_${getTableName(appDomainType)}_id ON ${getTableName(appDomainType)}($remoteDbId);');
+  //   await db.execute('CREATE INDEX idx_${getTableName(appDomainType)}_update_at_value ON ${getTableName(appDomainType)}(updatedAtValue);');
+  // }
 
   Map<String, dynamic> normalizeMap(Map<String, dynamic> inputMap) => null;
   BaseModel fromMap(Map<String, dynamic> map) => null;
