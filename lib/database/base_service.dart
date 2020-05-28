@@ -3,8 +3,6 @@ import 'dart:convert';
 
 import 'package:sqflite/sqflite.dart';
 
-//import 'package:harrier_central/util/constants.dart';
-
 class BaseModel {
   BaseModel();
   factory BaseModel.fromJson() => null;
@@ -12,16 +10,14 @@ class BaseModel {
 }
 
 class BaseTableHelper with BaseFields {
-  BaseTableHelper();
+  BaseTableHelper({this.cacheDuration = 365 * 3 * 86400000});
 
   String remoteDbId;
-
-  final num forceRequeryInterval = 1 * 1000;
-  final num cacheDuration = 365 * 3 * 86400000; // cause a force refresh of the cache every 3 years. This effectively prevents cache refreshes
+  num cacheDuration; // cause a force refresh of the cache every 3 years. This effectively prevents cache refreshes (Needs implementation)
 
   String getTableName(dynamic tableType) => null;
-  Future<dynamic> createTable(Database db, int version, dynamic tableType) async => null;
-  Future<dynamic> createIndexes(Database db, int version, dynamic appDomainType) async {
+  Future<void> createTable(Database db, int version, dynamic appDomainType) async => null;
+  Future<void> createIndexes(Database db, int version, dynamic appDomainType) async {
     await db.execute('CREATE INDEX idx_${getTableName(appDomainType)}_id ON ${getTableName(appDomainType)}($remoteDbId);');
     await db.execute('CREATE INDEX idx_${getTableName(appDomainType)}_update_at_value ON ${getTableName(appDomainType)}($colUpdatedAtValue);');
   }
@@ -38,8 +34,8 @@ mixin BaseFields {
 }
 
 class BaseService {
-  Future<List<BaseModel>> selectAllFromLocalDb(Database db, BaseTableHelper tableHelper, String tableName) async {
-    final List<Map<String, dynamic>> result = await db.query(tableName);
+  Future<List<BaseModel>> selectAllFromLocalDb(Database db, BaseTableHelper tableHelper, String appDomainType) async {
+    final List<Map<String, dynamic>> result = await db.query(appDomainType);
 
     final List<BaseModel> records = <BaseModel>[];
 
