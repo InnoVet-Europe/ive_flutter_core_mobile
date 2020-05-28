@@ -15,7 +15,7 @@ class BaseTableHelper with BaseFields {
   String remoteDbId;
   num cacheDuration; // cause a force refresh of the cache every 3 years. This effectively prevents cache refreshes (Needs implementation)
 
-  String getTableName(dynamic tableType) => null;
+  String getTableName(dynamic appDomainType) => null;
   Future<void> createTable(Database db, int version, dynamic appDomainType) async => null;
   Future<void> createIndexes(Database db, int version, dynamic appDomainType) async {
     await db.execute('CREATE INDEX idx_${getTableName(appDomainType)}_id ON ${getTableName(appDomainType)}($remoteDbId);');
