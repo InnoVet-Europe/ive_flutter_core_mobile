@@ -88,7 +88,7 @@ mixin BaseFields {
 
 class BaseService {
   /// For a given table and appDomain, [selectAllFromLocalDb] returns a list that contains all objects in the table
-  Future<List<BaseModel>> selectAllFromLocalDb(Database db, BaseTableHelper tableHelper, String appDomainType) async {
+  Future<List<BaseModel>> selectAllFromLocalDb(Database db, BaseTableHelper tableHelper, dynamic appDomainType) async {
     final List<Map<String, dynamic>> result = await db.query(tableHelper.getTableName(appDomainType));
 
     final List<BaseModel> records = <BaseModel>[];
