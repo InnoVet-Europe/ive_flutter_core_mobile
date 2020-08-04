@@ -361,4 +361,20 @@ class BaseService {
     print('$insertCounter $tableName records inserted, $updateCounter $tableName records updated, $deletedCounter $tableName records deleted');
     return insertCounter;
   }
+
+
+  Future<List<Map<String, dynamic>>> getSqlFieldsById(BaseTableHelper tableHelper, Database db, String id, dynamic appDomainType) async {
+
+    String tableName = tableHelper.getTableName(appDomainType);
+
+    final String query = '''
+      SELECT *
+      FROM $tableName
+      WHERE ${tableHelper.remoteDbId}= "$id"
+    ''';
+
+    final List<Map<String, dynamic>> results = await db.rawQuery(query);
+    return results;
+  }
+
 }
