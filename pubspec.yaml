@@ -1,7 +1,7 @@
   
 name: ive_flutter_core_mobile
 description: Core assets for InnoVet Europe Flutter projects
-version: 1.0.17
+version: 1.0.18
 author: InnoVet Europe
 homepage: https://www.innovetusa.com/
 
@@ -13,21 +13,11 @@ dependencies:
   flutter:
     sdk: flutter
 
-  crypto: ^2.1.5 # updated on 21 Jun 2020 from 2.1.4 # updated on 7 May 2020 from 2.0.6
-  flutter_spinkit: ^4.1.2+1 #updated on May 7 from 3.1.0 
-  geolocator: ^5.3.2+2 # updated on 21 Jun 2020 from 5.3.1
-  json_annotation: ^3.0.0
-  intl: ^0.16.1
   sqflite: ^1.3.1 # updated on 21 Jun 2020 from 1.3.0+1 #updated on May 7 from 1.3.0
   path_provider: ^1.6.11 # updated on 21 Jun 2020 from 1.6.7 #updated on May 7 from 1.6.5
-  photo_view: ^0.9.2 #updated on May 7 from 0.4.2
-  qr_flutter: ^3.2.0  #updated on May 7 from 2.1.0+55
-  shared_preferences: ^0.5.7+3 # updated on 21 Jun 2020 from 0.5.7+1  #updated on May 7 from 0.5.6+3
-  
+
 dev_dependencies:
-  build_runner: ^1.10.0 # updated on 21 Jun 2020 from 1.8.1
-  # flutter_test:
-  #   sdk: flutter
+  build_runner: ^1.10.1 # updated 05 Aug 2020 from 1.10.0 # updated on 21 Jun 2020 from 1.8.1
   json_serializable: ^3.3.0
 
 flutter:
