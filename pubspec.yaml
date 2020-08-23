@@ -1,13 +1,13 @@
   
 name: ive_flutter_core_mobile
 description: Core assets for InnoVet Europe Flutter projects
-version: 1.0.21
+version: 1.0.22
 author: InnoVet Europe
 homepage: https://www.innovetusa.com/
 
 environment:
   sdk: ">=2.7.0-0.0 <3.0.0"
-  flutter: 1.17.4
+  flutter: ^1.17.4
 
 dependencies:
   flutter:
