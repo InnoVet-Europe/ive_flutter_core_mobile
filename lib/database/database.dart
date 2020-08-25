@@ -34,7 +34,7 @@ class DBProvider {
     final String path = join(documentsDirectory.path, dbName);
     return openDatabase(path, version: dbVersion, onOpen: (Database db) async {
       // run any code that needs to execute once the DB has been opened
-      await openDb(db);
+      await openDb(db, informUser);
     }, onUpgrade: (Database db, int oldVersion, int newVersion) async {
       // run any required DB migrations
       MigrationsTableHelper.doDatabaseMigrations(db, migrations, oldVersion, dbVersion);
