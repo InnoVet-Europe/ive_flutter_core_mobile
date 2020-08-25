@@ -62,7 +62,7 @@ abstract class BaseTableHelper {
 mixin BaseFields {
   /// [colId] is the field name for the internal primary key of the data in SQFLite.
   /// It is an integer primary key that is not typically used by the app
-  static const String colId = 'id';
+  final String colId = 'id';
 
   /// [removed] is an integer flag that indicates whether or not a database record is
   /// active. A value of '0' indicates that the record is active, a value of '1' indicates
@@ -70,7 +70,7 @@ mixin BaseFields {
   /// flagged with a [removed] value of '1' it can be deleted from the on-device database.
   /// We still need to do some work on how records get deleted from the mobile device when they
   /// have been flagged as removed.
-  static const String colRemoved = 'removed';
+  final String colRemoved = 'removed';
 
   /// The [updatedAt] field is essential to our replication scheme. When a sync is done with the
   /// server, the mobile device sends the last [updatedAt] timestamp value to the server. The server then
@@ -80,10 +80,10 @@ mixin BaseFields {
   /// By having only a single source of time for the [updatedAt] value (i.e. the database server), we ensure
   /// that proper sync is maintained across all devices. [updatedAt] is a string value with the GMT time
   /// that the record was last updated.
-  static const String colUpdatedAt = 'updatedAt';
+  final String colUpdatedAt = 'updatedAt';
 
   /// [updatedAtValue] is a numeric representation of the [updatedAt] timestamp string
-  static const String colUpdatedAtValue = 'updatedAtValue';
+  final String colUpdatedAtValue = 'updatedAtValue';
 }
 
 class BaseService {
