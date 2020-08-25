@@ -7,10 +7,8 @@ import 'package:sqflite/sqflite.dart';
 
 import 'package:ive_flutter_core_mobile/database/migrations.dart';
 
-
 /// [DBProvider] is a lightweight class to help with some common DB functions
 class DBProvider {
-
   /// [deleteDb] does what it says on the tin.  ;-)
   static Future<bool> deleteDb(String dbName) async {
     final Directory documentsDirectory = await getApplicationDocumentsDirectory();
@@ -20,7 +18,7 @@ class DBProvider {
     return true;
   }
 
-  /// [openOrInitDb] will open a database if one exists or will 
+  /// [openOrInitDb] will open a database if one exists or will
   /// create a new one if one is not already present. It returns
   /// a pointer to the DB as a Future.
   static Future<Database> openOrInitDb(
@@ -29,12 +27,14 @@ class DBProvider {
     Function informUser,
     List<MigrationsModel> migrations, {
     Function createTables,
+    Function openDb,
   }) async {
     // DBs are stored in the documents directory on the mobile device.
     final Directory documentsDirectory = await getApplicationDocumentsDirectory();
     final String path = join(documentsDirectory.path, dbName);
-    return openDatabase(path, version: dbVersion, onOpen: (Database db) {
-      // nothing happens in here
+    return openDatabase(path, version: dbVersion, onOpen: (Database db) async {
+      // run any code that needs to execute once the DB has been opened
+      await openDb(db);
     }, onUpgrade: (Database db, int oldVersion, int newVersion) async {
       // run any required DB migrations
       MigrationsTableHelper.doDatabaseMigrations(db, migrations, oldVersion, dbVersion);
