@@ -5,23 +5,9 @@ import 'package:flutter/material.dart';
 
 import 'package:ive_flutter_core_mobile/util/core_mobile_utilities.dart';
 
-abstract class Enum<T> {
-  const Enum(this._value);
-  final T _value;
-  T get value => _value;
-}
-
-class EnumConnectionStatus<int> extends Enum<int> {
-  const EnumConnectionStatus(int val) : super(val);
-}
-
-const EnumConnectionStatus<int> connectionStatus_notConnected = EnumConnectionStatus<int>(0);
-const EnumConnectionStatus<int> connectionStatus_connected = EnumConnectionStatus<int>(1);
-
-EnumConnectionStatus<int> globalConnectionStatus;
+enum EnumConnectionStatus { connected, not_connected }
 
 class Connection {
-
   static Future<bool> checkInternetConnection() async {
     bool connected = false;
     try {
@@ -36,10 +22,10 @@ class Connection {
     }
     return connected;
   }
-  
-  static Widget styleForConnected(Widget w, {num borderRadius = 0.0}) {
+
+  static Widget styleForConnected(EnumConnectionStatus status, Widget w, {num borderRadius = 0.0}) {
     return Container(
-      foregroundDecoration: globalConnectionStatus == connectionStatus_connected
+      foregroundDecoration: status == EnumConnectionStatus.connected
           ? const BoxDecoration()
           : BoxDecoration(
               borderRadius: BorderRadius.circular(borderRadius),
@@ -47,7 +33,7 @@ class Connection {
               backgroundBlendMode: BlendMode.lighten,
             ),
       child: Container(
-        foregroundDecoration: globalConnectionStatus == connectionStatus_connected
+        foregroundDecoration: status == EnumConnectionStatus.connected
             ? const BoxDecoration()
             : const BoxDecoration(
                 color: Colors.grey,
@@ -58,12 +44,10 @@ class Connection {
     );
   }
 
-  static bool checkForConnection(BuildContext context, {String title, String message}) {
-    if (globalConnectionStatus == connectionStatus_notConnected) {
+  static bool checkForConnection(BuildContext context, EnumConnectionStatus status, {String title, String message}) {
+    if (status == EnumConnectionStatus.not_connected) {
       IveCoreMobileUtilities.showAlert(context, title ?? 'Offline mode', message ?? 'This feature is not available in offline mode. Please connect to the internet to use this feature', 'OK');
     }
-    return globalConnectionStatus == connectionStatus_connected;
+    return status == EnumConnectionStatus.connected;
   }
-
-  
 }
