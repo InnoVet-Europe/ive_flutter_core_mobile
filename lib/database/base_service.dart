@@ -29,6 +29,19 @@ abstract class BaseTableHelper {
   /// data in SQFLite
   String remoteDbId;
 
+  /// [secondaryKey] is a string that contains the name of an additional key field
+  /// in the remote database in cases where we have a compound primary key.
+  /// If empty, only the remoteDbId is used as a key, if populated, both the
+  /// remoteDbId and the secondaryKey will be used to uniquely identify records
+  String secondaryKey;
+
+  /// [tertiaryKey] is a string that contains the name of a third additional key field
+  /// in the remote database in cases where we have a compound primary key.
+  /// If empty, only the remoteDbId and possibly the secondary keys are used, if populated,
+  /// all three keys will be used. NOTE: if the secondary key is empty, but the tertiary key
+  /// is populated, it will be ignored.
+  String tertiaryKey;
+
   /// [getTableName] is a function that returns the SQFLite table name for a given
   /// data entity based on the current app domain. App domains allow us to have more
   /// than one copy of a table in the mobile device at any one time. For example,
@@ -313,8 +326,16 @@ class BaseService {
           'updatedAtValue': DateTime.parse(fieldsOnTheWire['updatedAt'].toString().substring(0, 19)).millisecondsSinceEpoch,
         });
 
+        String query;
+        if ((tableHelper.secondaryKey == null) || (tableHelper.secondaryKey.isEmpty)) {
+          query = 'SELECT id FROM $tableName WHERE ${tableHelper.remoteDbId} = "${fieldsOnTheWire[tableHelper.remoteDbId]}"';
+        } else if ((tableHelper.tertiaryKey == null) || (tableHelper.tertiaryKey.isEmpty)) {
+          query = 'SELECT id FROM $tableName WHERE ${tableHelper.remoteDbId} = "${fieldsOnTheWire[tableHelper.remoteDbId]}" AND ${tableHelper.secondaryKey} = "${fieldsOnTheWire[tableHelper.secondaryKey]}"';
+        } else {
+          query = 'SELECT id FROM $tableName WHERE ${tableHelper.remoteDbId} = "${fieldsOnTheWire[tableHelper.remoteDbId]}" AND ${tableHelper.secondaryKey} = "${fieldsOnTheWire[tableHelper.secondaryKey]}" AND ${tableHelper.tertiaryKey} = "${fieldsOnTheWire[tableHelper.tertiaryKey]}"';
+        }
+
         // does the record already exist in the database? Check using the remoteDbId.
-        final String query = 'SELECT id FROM $tableName WHERE ${tableHelper.remoteDbId} = "${fieldsOnTheWire[tableHelper.remoteDbId]}"';
         final List<Map<String, dynamic>> localDbRecord = await db.rawQuery(query);
 
         // has the record been marked as deleted?
@@ -362,14 +383,30 @@ class BaseService {
     return insertCounter;
   }
 
-  Future<List<Map<String, dynamic>>> getSqlFieldsById(BaseTableHelper tableHelper, Database db, String id, dynamic appDomainType) async {
+  Future<List<Map<String, dynamic>>> getSqlFieldsById(BaseTableHelper tableHelper, Database db, String id, dynamic appDomainType, {String secondaryId, String tertiaryId}) async {
     String tableName = tableHelper.getTableName(appDomainType);
 
-    final String query = '''
-      SELECT *
-      FROM $tableName
-      WHERE ${tableHelper.remoteDbId}= "$id"
-    ''';
+    String query;
+
+    if ((secondaryId == null) || (secondaryId.isEmpty)) {
+      query = '''
+          SELECT *
+          FROM $tableName
+          WHERE ${tableHelper.remoteDbId} = "$id"
+          ''';
+    } else if ((tertiaryId == null) || (tertiaryId.isEmpty)) {
+      query = '''
+          SELECT *
+          FROM $tableName
+          WHERE ${tableHelper.remoteDbId} = "$id" AND ${tableHelper.secondaryKey} = "$secondaryId" 
+          ''';
+    } else {
+      query = '''
+          SELECT *
+          FROM $tableName
+          WHERE ${tableHelper.remoteDbId} = "$id" AND ${tableHelper.secondaryKey} = "$secondaryId" AND ${tableHelper.tertiaryKey} = "$tertiaryId" 
+          ''';
+    }
 
     final List<Map<String, dynamic>> results = await db.rawQuery(query);
     return results;
