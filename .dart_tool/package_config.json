@@ -74,6 +74,12 @@
       "languageVersion": "2.3"
     },
     {
+      "name": "characters",
+      "rootUri": "file:///Users/jameswhite/.pub-cache/hosted/pub.dartlang.org/characters-1.1.0-nullsafety.3",
+      "packageUri": "lib/",
+      "languageVersion": "2.10"
+    },
+    {
       "name": "charcode",
       "rootUri": "file:///Users/jameswhite/.pub-cache/hosted/pub.dartlang.org/charcode-1.1.3",
       "packageUri": "lib/",
@@ -99,9 +105,9 @@
     },
     {
       "name": "collection",
-      "rootUri": "file:///Users/jameswhite/.pub-cache/hosted/pub.dartlang.org/collection-1.14.12",
+      "rootUri": "file:///Users/jameswhite/.pub-cache/hosted/pub.dartlang.org/collection-1.15.0-nullsafety.3",
       "packageUri": "lib/",
-      "languageVersion": "2.0"
+      "languageVersion": "2.10"
     },
     {
       "name": "convert",
@@ -143,7 +149,7 @@
       "name": "flutter",
       "rootUri": "file:///Users/jameswhite/projects/flutter/packages/flutter",
       "packageUri": "lib/",
-      "languageVersion": "2.2"
+      "languageVersion": "2.10"
     },
     {
       "name": "glob",
@@ -219,9 +225,9 @@
     },
     {
       "name": "meta",
-      "rootUri": "file:///Users/jameswhite/.pub-cache/hosted/pub.dartlang.org/meta-1.1.8",
+      "rootUri": "file:///Users/jameswhite/.pub-cache/hosted/pub.dartlang.org/meta-1.3.0-nullsafety.3",
       "packageUri": "lib/",
-      "languageVersion": "1.12"
+      "languageVersion": "2.10"
     },
     {
       "name": "mime",
@@ -411,15 +417,15 @@
     },
     {
       "name": "typed_data",
-      "rootUri": "file:///Users/jameswhite/.pub-cache/hosted/pub.dartlang.org/typed_data-1.1.6",
+      "rootUri": "file:///Users/jameswhite/.pub-cache/hosted/pub.dartlang.org/typed_data-1.3.0-nullsafety.3",
       "packageUri": "lib/",
-      "languageVersion": "2.0"
+      "languageVersion": "2.10"
     },
     {
       "name": "vector_math",
-      "rootUri": "file:///Users/jameswhite/.pub-cache/hosted/pub.dartlang.org/vector_math-2.0.8",
+      "rootUri": "file:///Users/jameswhite/.pub-cache/hosted/pub.dartlang.org/vector_math-2.1.0-nullsafety.3",
       "packageUri": "lib/",
-      "languageVersion": "2.0"
+      "languageVersion": "2.10"
     },
     {
       "name": "watcher",
@@ -452,7 +458,7 @@
       "languageVersion": "2.7"
     }
   ],
-  "generated": "2020-09-26T13:28:40.526698Z",
+  "generated": "2020-10-21T10:57:13.776145Z",
   "generator": "pub",
-  "generatorVersion": "2.8.4"
+  "generatorVersion": "2.10.2"
 }

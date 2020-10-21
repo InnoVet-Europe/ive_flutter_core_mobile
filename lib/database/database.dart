@@ -28,19 +28,20 @@ class DBProvider {
     List<MigrationsModel> migrations, {
     Function createTables,
     Function openDb,
+    String clientAppIdentifier,
   }) async {
     // DBs are stored in the documents directory on the mobile device.
     final Directory documentsDirectory = await getApplicationDocumentsDirectory();
     final String path = join(documentsDirectory.path, dbName);
     return openDatabase(path, version: dbVersion, onOpen: (Database db) async {
       // run any code that needs to execute once the DB has been opened
-      await openDb(db, informUser);
+      await openDb(db, informUser, clientAppIdentifier);
     }, onUpgrade: (Database db, int oldVersion, int newVersion) async {
       // run any required DB migrations
       MigrationsTableHelper.doDatabaseMigrations(db, migrations, oldVersion, dbVersion);
     }, onCreate: (Database db, int version) async {
       // call back to a function that will create tables and indexes
-      await createTables(db, version, informUser);
+      await createTables(db, version, informUser, clientAppIdentifier);
     }, onConfigure: (Database db) async {
       await db.execute('PRAGMA cache_size=1500000');
     });
