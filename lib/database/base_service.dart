@@ -21,8 +21,14 @@ abstract class BaseTableHelper {
   /// cached in SQFLite. At the expiration of the cache duration, the
   /// entire table would re-load from the server. This is not currently implemented
 
-  num cacheDuration; // cause a force refresh of the cache every 3 years. This effectively prevents cache refreshes (Needs implementation)
+  num cacheDuration; // cause a force refresh of the cache every 3 years. This
+  // effectively prevents cache refreshes (Needs implementation)
   BaseTableHelper({this.cacheDuration = 365 * 3 * 86400000});
+
+  /// [humanReadableTableName] is a string that holds the name of the table
+  /// in human readable form. This is mainly used during app initializaiton
+  /// when we are displaying the progress of loading the app to the end user.
+  String humanReadableTableName;
 
   /// [remoteDbId] is a string that contains the name of the primary key field
   /// in the remote database. It should also normally serve as the primary key for the
