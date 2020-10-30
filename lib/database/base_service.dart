@@ -314,7 +314,7 @@ class BaseService {
         // passed in, notify the user of our progress
         if ((percentage != lastPercentage) && (informUser != null)) {
           lastPercentage = percentage;
-          informUser('Loading $tableName data\r\n$percentage% complete');
+          informUser('Loading ${tableHelper?.humanReadableTableName ?? tableName ?? 'App Data'}\r\n$percentage% complete');
         }
 
         // Now that the housekeeping is done, let's normalize the data from the wire
