@@ -8,9 +8,11 @@ import 'package:sqflite/sqflite.dart';
 /// value other than as a placeholder
 abstract class BaseModel {
   BaseModel();
-  factory BaseModel.fromJson() => null;
-  Map<String, dynamic> toJson() => null;
+  // factory BaseModel.fromJson() => null;
+  // Map<String, dynamic> toJson() => null;
 }
+
+class EmptyModel implements BaseModel {}
 
 /// The BaseTableHelper class is an abstract class to define a few of the
 /// required functions for all table helper classes
@@ -21,9 +23,14 @@ abstract class BaseTableHelper {
   /// cached in SQFLite. At the expiration of the cache duration, the
   /// entire table would re-load from the server. This is not currently implemented
 
-  num cacheDuration; // cause a force refresh of the cache every 3 years. This
+  // cause a force refresh of the cache every 3 years. This
   // effectively prevents cache refreshes (Needs implementation)
-  BaseTableHelper({this.cacheDuration = 365 * 3 * 86400000});
+  BaseTableHelper(
+      {this.cacheDuration = 365 * 3 * 86400000,
+      this.humanReadableTableName = '<no human readable table name>',
+      this.remoteDbId = '<no remote db ID>'});
+
+  num cacheDuration;
 
   /// [humanReadableTableName] is a string that holds the name of the table
   /// in human readable form. This is mainly used during app initializaiton
@@ -39,14 +46,14 @@ abstract class BaseTableHelper {
   /// in the remote database in cases where we have a compound primary key.
   /// If empty, only the remoteDbId is used as a key, if populated, both the
   /// remoteDbId and the secondaryKey will be used to uniquely identify records
-  String secondaryKey;
+  String? secondaryKey;
 
   /// [tertiaryKey] is a string that contains the name of a third additional key field
   /// in the remote database in cases where we have a compound primary key.
   /// If empty, only the remoteDbId and possibly the secondary keys are used, if populated,
   /// all three keys will be used. NOTE: if the secondary key is empty, but the tertiary key
   /// is populated, it will be ignored.
-  String tertiaryKey;
+  String? tertiaryKey;
 
   /// [getTableName] is a function that returns the SQFLite table name for a given
   /// data entity based on the current app domain. App domains allow us to have more
@@ -55,14 +62,20 @@ abstract class BaseTableHelper {
   /// might only contain records relevant to that one user, in "admin" an identical copy of
   /// the table might exist that contains information for all users. Each of these two tables
   /// will have a different name depending on the specific appDomain.
-  String getTableName(dynamic appDomainType) => null;
+  String getTableName(dynamic appDomainType) => '<no table name>';
 
   /// Upon initialization we create SQFLite tables for each data entity, here's the method signature for
   /// that function
-  Future<void> createTable(Database db, int version, dynamic appDomainType) async => null;
+  Future<void> createTable(
+      Database db, int version, dynamic appDomainType) async {
+    return;
+  }
 
   /// After the tables have been created and loaded, we then apply any required indexes
-  Future<void> createIndexes(Database db, int version, dynamic appDomainType) async => null;
+  Future<void> createIndexes(
+      Database db, int version, dynamic appDomainType) async {
+    return;
+  }
 
   /// [normalizeMap] is used to take json content from the wire and normalize it against the data model
   /// resident in the current mobile device. This allows developers to add fields to the wire
@@ -71,10 +84,13 @@ abstract class BaseTableHelper {
   /// specified entity, it does not have to be called a second time. If the number of fields is different,
   /// [normalizeMap] will return a map of JSON objects that has been stripped of any fields that
   /// are not present in the on-device database.
-  Map<String, dynamic> normalizeMap(Map<String, dynamic> inputMap) => null;
+  Map<String, dynamic> normalizeMap(Map<String, dynamic> inputMap) =>
+      <String, dynamic>{};
 
   /// [fromMap] is pretty self explanitory, it converts a map of JSON objects to the corresponding data object
-  BaseModel fromMap(Map<String, dynamic> map) => null;
+  BaseModel fromMap(Map<String, dynamic> map) {
+    return EmptyModel();
+  }
 }
 
 /// [BaseFields] are fields that are required for each data entity
@@ -107,12 +123,14 @@ mixin BaseFields {
 
 class BaseService {
   /// For a given table and appDomain, [selectAllFromLocalDb] returns a list that contains all objects in the table
-  Future<List<BaseModel>> selectAllFromLocalDb(Database db, BaseTableHelper tableHelper, dynamic appDomainType) async {
-    final List<Map<String, dynamic>> result = await db.query(tableHelper.getTableName(appDomainType));
+  Future<List<BaseModel>> selectAllFromLocalDb(
+      Database db, BaseTableHelper tableHelper, dynamic appDomainType) async {
+    final List<Map<String, dynamic>> result =
+        await db.query(tableHelper.getTableName(appDomainType));
 
     final List<BaseModel> records = <BaseModel>[];
 
-    if ((result != null) && (result.isNotEmpty)) {
+    if (result.isNotEmpty) {
       for (int i = 0; i < result.length; i++) {
         if (result[i]['removed'] == 0) {
           final BaseModel record = tableHelper.fromMap(result[i]);
@@ -125,14 +143,17 @@ class BaseService {
 
   /// [getLastUpdatedTime] returns a numeric value that represents the latest time a record contained in
   /// the table was updated. This is used for database replication.
-  Future<num> getLastUpdatedTime(Database db, BaseTableHelper tableHelper, String tableName, String colUpdatedAtValue) async {
-    final List<Map<String, dynamic>> table = await db.rawQuery('SELECT MAX($colUpdatedAtValue) AS maxDate FROM $tableName');
-    final num timeValue = table.first['maxDate'];
+  Future<num> getLastUpdatedTime(Database db, BaseTableHelper tableHelper,
+      String tableName, String colUpdatedAtValue) async {
+    final List<Map<String, dynamic>> table = await db
+        .rawQuery('SELECT MAX($colUpdatedAtValue) AS maxDate FROM $tableName');
+    final num timeValue = table.first['maxDate'] as num;
     return timeValue;
   }
 
   /// [clearTable] deletes all records from a SQFLite table
-  Future<void> clearTable(Database db, BaseTableHelper tableHelper, String tableName) async {
+  Future<void> clearTable(
+      Database db, BaseTableHelper tableHelper, String tableName) async {
     final String query = 'DELETE FROM $tableName';
     await db.rawDelete(query).then((void dummy) {
       // NOTE: When we re-implmeent cache clearing, uncomment the code below
@@ -148,11 +169,14 @@ class BaseService {
   /// to be inserted into any table. In this case, we need to return the adHocData to the calling
   /// function.
 
-  Future<List<dynamic>> updateSqlTablesFromJson(String jsonResults, List<BaseTableHelper> tables, Database db, dynamic appDomainType, {Function informUser}) async {
+  Future<List<dynamic>> updateSqlTablesFromJson(String jsonResults,
+      List<BaseTableHelper> tables, Database db, dynamic appDomainType,
+      {Function? informUser}) async {
     // Some API calls return adHocData that is not intended to be inserted into the
     // internal SQFLite DB. This data can be used for a variety of reasons within the app.
     // Get ready to return some ad hoc data.
-    List<dynamic> adHocData = <dynamic>[]; // prepare to return an empty list instead of null
+    List<dynamic> adHocData =
+        <dynamic>[]; // prepare to return an empty list instead of null
 
     // Sometimes, the results on the wire consist of an array of result sets from many different
     // SQL tables on the remote DB. We want to
@@ -167,65 +191,69 @@ class BaseService {
     final Iterable<Match> matches = r.allMatches(jsonResults);
     for (int i = 0; i < matches.length; i++) {
       // grab a single result set
-      final String ms = matches.elementAt(i).group(0);
+      final String? ms = matches.elementAt(i).group(0);
 
       bool isProcessed = false;
 
-      // are we processing adHocData?
-      if (ms.startsWith(r'[{"adHocDataId"')) {
-        isProcessed = true;
-        final List<dynamic> adHocItems = jsonDecode('$ms');
-        if ((adHocItems != null) && (adHocItems.isNotEmpty)) {
-          adHocData = adHocItems;
-        }
-      } else {
-        // if we are not processing adHocData,
-        // look through the tables that we are allowed to insert into and see if
-        // we can find which one has the same remoteDbId as is present in the received data
-        for (BaseTableHelper helper in tables) {
-          if (ms.startsWith('[{"${helper.remoteDbId}"')) {
-            isProcessed = true;
-            // we found a table that matches the received data, so go ahead
-            // and do a bulk insert into the SQFLite DB.
-            await _bulkUpdateDatabase(
-              helper,
-              helper.getTableName(appDomainType),
-              '[$ms]',
-              db,
-              informUser: informUser,
-            );
+      if (ms != null) {
+        // are we processing adHocData?
+        if (ms.startsWith(r'[{"adHocDataId"')) {
+          isProcessed = true;
+          final List<dynamic> adHocItems = jsonDecode(ms) as List<dynamic>;
+          if (adHocItems.isNotEmpty) {
+            adHocData = adHocItems;
           }
-        }
-      }
-
-      if (!isProcessed) {
-        // in the SQL stored procedures that process the data, sometimes we run across an error
-        // (e.g. such as an invalid access token). This data will contain an arbitrary 'errorId'
-        // field that serves as a flag that an error has occurred. When this happens, put the
-        // error information into the adHocData variable and return that to the caller.
-        if (ms.startsWith(r'[{"errorId"')) {
-          final List<dynamic> errorItems = jsonDecode('$ms');
-          if ((errorItems != null) && (errorItems.isNotEmpty)) {
-            adHocData = errorItems;
-          }
-          print('server messages received');
         } else {
-          // There is a chance that the server returned data that this version
-          // of the software is not expecting, such as in cases when new features
-          // have been added to new releases and this is an older release
-          // in these cases, just ignore the extra data.
-          // It is also possible that we have received data that the app developer
-          // has chosen to ignore by not passing in the appropriate table into the
-          // list of tables when this function was called.
+          // if we are not processing adHocData,
+          // look through the tables that we are allowed to insert into and see if
+          // we can find which one has the same remoteDbId as is present in the received data
+          for (final BaseTableHelper helper in tables) {
+            if (ms.startsWith('[{"${helper.remoteDbId}"')) {
+              isProcessed = true;
+              // we found a table that matches the received data, so go ahead
+              // and do a bulk insert into the SQFLite DB.
+              await _bulkUpdateDatabase(
+                helper,
+                helper.getTableName(appDomainType),
+                '[$ms]',
+                db,
+                informUser: informUser,
+              );
+            }
+          }
+        }
 
-          // Just to be safe, do a debug print anyway
-          // and remind the developer that the first field in the result set must be
-          // the primary key of the remote DB so we can match the internal table with
-          // the received data.
-          print('The following data was not inserted into the device DB');
-          print('Please ensure that you are passing in all tables that you want processed by this function in the "tables" parameter');
-          print('Also, it is required that the primary key for the table to be the first field in the JSON data. Please check the JSON data format.');
-          print(ms);
+        if (!isProcessed) {
+          // in the SQL stored procedures that process the data, sometimes we run across an error
+          // (e.g. such as an invalid access token). This data will contain an arbitrary 'errorId'
+          // field that serves as a flag that an error has occurred. When this happens, put the
+          // error information into the adHocData variable and return that to the caller.
+          if (ms.startsWith(r'[{"errorId"')) {
+            final List<dynamic> errorItems = jsonDecode(ms) as List<dynamic>;
+            if (errorItems.isNotEmpty) {
+              adHocData = errorItems;
+            }
+            print('server messages received');
+          } else {
+            // There is a chance that the server returned data that this version
+            // of the software is not expecting, such as in cases when new features
+            // have been added to new releases and this is an older release
+            // in these cases, just ignore the extra data.
+            // It is also possible that we have received data that the app developer
+            // has chosen to ignore by not passing in the appropriate table into the
+            // list of tables when this function was called.
+
+            // Just to be safe, do a debug print anyway
+            // and remind the developer that the first field in the result set must be
+            // the primary key of the remote DB so we can match the internal table with
+            // the received data.
+            print('The following data was not inserted into the device DB');
+            print(
+                'Please ensure that you are passing in all tables that you want processed by this function in the "tables" parameter');
+            print(
+                'Also, it is required that the primary key for the table to be the first field in the JSON data. Please check the JSON data format.');
+            print(ms);
+          }
         }
       }
     }
@@ -240,18 +268,22 @@ class BaseService {
   /// ToDo (DevTeam): ultimately we need to find a way when a record has been deleted on the mobile device to make sure it does
   /// not keep getting sent over the wire. This can be challenging because one record on the central server may exist in many
   /// mobile devices. For now, we try to avoid deleting records if possible because this issue has not been addressed.
-  Future<int> _bulkUpdateDatabase(BaseTableHelper tableHelper, String tableName, String rawResults, Database db, {Function informUser}) async {
+  Future<int> _bulkUpdateDatabase(BaseTableHelper tableHelper, String tableName,
+      String rawResults, Database db,
+      {Function? informUser}) async {
     int updateCounter = 0;
     int insertCounter = 0;
     int deletedCounter = 0;
 
-    bool doNormalizeMap;
+    bool? doNormalizeMap;
 
     // results will come in as an array of json result sets, typically there will be only
     // one result set that contains an array of json objects, but in exceptional cases
     // there can be more than one result set.
-    final List<dynamic> jsonResultSets = json.decode(rawResults);
-    print('$tableName result sets received from cloud = ${jsonResultSets.length}');
+    final List<dynamic> jsonResultSets =
+        json.decode(rawResults) as List<dynamic>;
+    print(
+        '$tableName result sets received from cloud = ${jsonResultSets.length}');
 
     // keep track of the percentage of results added to the DB so we can give the user
     // a status indication that the database is being populated. This is typically
@@ -259,16 +291,17 @@ class BaseService {
     int lastPercentage = 0;
 
     // SQFLite is much more efficient when you batch database calls, so start a new batch
-    Batch batch = db.batch();
+    final Batch batch = db.batch();
 
     // loop through the resul sets
     for (int i = 0; i < jsonResultSets.length; i++) {
-      final List<dynamic> jsonResults = jsonResultSets[i];
+      final List<dynamic> jsonResults = jsonResultSets[i] as List<dynamic>;
       print('$tableName results received from cloud = ${jsonResults.length}');
 
       // then loop through the records in each result set
       for (int j = 0; j < jsonResults.length; j++) {
-        Map<String, dynamic> fieldsOnTheWire = jsonResults[j];
+        Map<String, dynamic> fieldsOnTheWire =
+            jsonResults[j] as Map<String, dynamic>;
 
         // the first time through the loop, check to see if the data on the wire matches the
         // data in the internal database. If it does not, we want to print out the name
@@ -277,13 +310,15 @@ class BaseService {
         if (doNormalizeMap == null) {
           // using the data from the wire, get a map of json data that matches the fields
           // in the internal database.
-          final Map<String, dynamic> internalDbFields = tableHelper.normalizeMap(fieldsOnTheWire);
+          final Map<String, dynamic> internalDbFields =
+              tableHelper.normalizeMap(fieldsOnTheWire);
 
           // set the doNormalizeMap variable accordingly
           doNormalizeMap = internalDbFields.length != fieldsOnTheWire.length;
           if (doNormalizeMap) {
             // if the fields don't match, we need to see where the differences are and do a debug print
-            print('Normalize map called for $tableName, # of fields on the wire = ${fieldsOnTheWire.length}, # of fields in internal DB = ${internalDbFields.length}');
+            print(
+                'Normalize map called for $tableName, # of fields on the wire = ${fieldsOnTheWire.length}, # of fields in internal DB = ${internalDbFields.length}');
 
             // loop through the map of data from the wire and see if any of them
             // were not present in the internal database (this indicates a field has been added to the server
@@ -291,7 +326,8 @@ class BaseService {
             for (int i = 0; i < fieldsOnTheWire.length; i++) {
               final String key = fieldsOnTheWire.keys.elementAt(i);
               if (!internalDbFields.containsKey(key)) {
-                print('$key field is on the wire but not in the internal database');
+                print(
+                    '$key field is on the wire but not in the internal database');
               }
             }
 
@@ -301,7 +337,8 @@ class BaseService {
             for (int i = 0; i < internalDbFields.length; i++) {
               final String key = internalDbFields.keys.elementAt(i);
               if (!fieldsOnTheWire.containsKey(key)) {
-                print('$key field is in the internal database but not on the wire');
+                print(
+                    '$key field is in the internal database but not on the wire');
               }
             }
           }
@@ -314,7 +351,8 @@ class BaseService {
         // passed in, notify the user of our progress
         if ((percentage != lastPercentage) && (informUser != null)) {
           lastPercentage = percentage;
-          informUser('Loading ${tableHelper?.humanReadableTableName ?? tableName ?? 'App Data'}\r\n$percentage% complete');
+          informUser(
+              'Loading ${tableHelper.humanReadableTableName}\r\n$percentage% complete');
         }
 
         // Now that the housekeeping is done, let's normalize the data from the wire
@@ -329,20 +367,28 @@ class BaseService {
 
         // since we are doing a bulk insert / update of the database, we need to append the 'updatedAtValue'
         fieldsOnTheWire.addAll(<String, dynamic>{
-          'updatedAtValue': DateTime.parse(fieldsOnTheWire['updatedAt'].toString().substring(0, 19)).millisecondsSinceEpoch,
+          'updatedAtValue': DateTime.parse(
+                  fieldsOnTheWire['updatedAt'].toString().substring(0, 19))
+              .millisecondsSinceEpoch,
         });
 
         String query;
-        if ((tableHelper.secondaryKey == null) || (tableHelper.secondaryKey.isEmpty)) {
-          query = 'SELECT id FROM $tableName WHERE ${tableHelper.remoteDbId} = "${fieldsOnTheWire[tableHelper.remoteDbId]}"';
-        } else if ((tableHelper.tertiaryKey == null) || (tableHelper.tertiaryKey.isEmpty)) {
-          query = 'SELECT id FROM $tableName WHERE ${tableHelper.remoteDbId} = "${fieldsOnTheWire[tableHelper.remoteDbId]}" AND ${tableHelper.secondaryKey} = "${fieldsOnTheWire[tableHelper.secondaryKey]}"';
+        if ((tableHelper.secondaryKey == null) ||
+            (tableHelper.secondaryKey!.isEmpty)) {
+          query =
+              'SELECT id FROM $tableName WHERE ${tableHelper.remoteDbId} = "${fieldsOnTheWire[tableHelper.remoteDbId]}"';
+        } else if ((tableHelper.tertiaryKey == null) ||
+            (tableHelper.tertiaryKey!.isEmpty)) {
+          query =
+              'SELECT id FROM $tableName WHERE ${tableHelper.remoteDbId} = "${fieldsOnTheWire[tableHelper.remoteDbId]}" AND ${tableHelper.secondaryKey} = "${fieldsOnTheWire[tableHelper.secondaryKey]}"';
         } else {
-          query = 'SELECT id FROM $tableName WHERE ${tableHelper.remoteDbId} = "${fieldsOnTheWire[tableHelper.remoteDbId]}" AND ${tableHelper.secondaryKey} = "${fieldsOnTheWire[tableHelper.secondaryKey]}" AND ${tableHelper.tertiaryKey} = "${fieldsOnTheWire[tableHelper.tertiaryKey]}"';
+          query =
+              'SELECT id FROM $tableName WHERE ${tableHelper.remoteDbId} = "${fieldsOnTheWire[tableHelper.remoteDbId]}" AND ${tableHelper.secondaryKey} = "${fieldsOnTheWire[tableHelper.secondaryKey]}" AND ${tableHelper.tertiaryKey} = "${fieldsOnTheWire[tableHelper.tertiaryKey]}"';
         }
 
         // does the record already exist in the database? Check using the remoteDbId.
-        final List<Map<String, dynamic>> localDbRecord = await db.rawQuery(query);
+        final List<Map<String, dynamic>> localDbRecord =
+            await db.rawQuery(query);
 
         // has the record been marked as deleted?
         if ((jsonResults[j]['removed'] ?? 0) == 0) {
@@ -354,7 +400,7 @@ class BaseService {
           }
 
           // did our query of the localDb return a record based on the remoteDbId?
-          if ((localDbRecord == null) || (localDbRecord.isEmpty)) {
+          if (localDbRecord.isEmpty) {
             // no, the record does not yet exist, so add a new one
             batch.insert(tableName, fieldsOnTheWire);
             insertCounter++;
@@ -368,10 +414,10 @@ class BaseService {
         } else {
           // the 'removed' flag was non-zero, so we need to delete the record
           // from the internal DB if it exists.
-          if ((localDbRecord != null) && (localDbRecord.isNotEmpty)) {
+          if (localDbRecord.isNotEmpty) {
             // grab the primary key as we did above
             final String rowId = localDbRecord.first['id'].toString();
-            if ((rowId != null) && (rowId.isNotEmpty)) {
+            if (rowId.isNotEmpty) {
               // and delete if required
               batch.delete(tableName, where: 'id = $rowId');
               deletedCounter++;
@@ -385,12 +431,19 @@ class BaseService {
     await batch.commit(noResult: true);
 
     // and debug print the results
-    print('$insertCounter $tableName records inserted, $updateCounter $tableName records updated, $deletedCounter $tableName records deleted');
+    print(
+        '$insertCounter $tableName records inserted, $updateCounter $tableName records updated, $deletedCounter $tableName records deleted');
     return insertCounter;
   }
 
-  Future<List<Map<String, dynamic>>> getSqlFieldsById(BaseTableHelper tableHelper, Database db, String id, dynamic appDomainType, {String secondaryId, String tertiaryId}) async {
-    String tableName = tableHelper.getTableName(appDomainType);
+  Future<List<Map<String, dynamic>>> getSqlFieldsById(
+      BaseTableHelper tableHelper,
+      Database db,
+      String id,
+      dynamic appDomainType,
+      {String? secondaryId,
+      String? tertiaryId}) async {
+    final String tableName = tableHelper.getTableName(appDomainType);
 
     String query;
 

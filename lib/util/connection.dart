@@ -11,7 +11,8 @@ class Connection {
   static Future<bool> checkInternetConnection() async {
     bool connected = false;
     try {
-      final List<InternetAddress> result = await InternetAddress.lookup('google.com');
+      final List<InternetAddress> result =
+          await InternetAddress.lookup('google.com');
       if (result.isNotEmpty && result[0].rawAddress.isNotEmpty) {
         print('connected');
         connected = true;
@@ -23,12 +24,13 @@ class Connection {
     return connected;
   }
 
-  static Widget styleForConnected(EnumConnectionStatus status, Widget w, {num borderRadius = 0.0}) {
+  static Widget styleForConnected(EnumConnectionStatus status, Widget w,
+      {num borderRadius = 0.0}) {
     return Container(
       foregroundDecoration: status == EnumConnectionStatus.connected
           ? const BoxDecoration()
           : BoxDecoration(
-              borderRadius: BorderRadius.circular(borderRadius),
+              borderRadius: BorderRadius.circular(borderRadius.toDouble()),
               color: Colors.grey,
               backgroundBlendMode: BlendMode.lighten,
             ),
@@ -44,9 +46,13 @@ class Connection {
     );
   }
 
-  static bool checkForConnection(BuildContext context, EnumConnectionStatus status, {String title, String message}) {
+  static bool checkForConnection(
+      BuildContext context, EnumConnectionStatus status,
+      {String title = 'Offline mode',
+      String message =
+          'This feature is not available in offline mode. Please connect to the internet to use this feature'}) {
     if (status == EnumConnectionStatus.not_connected) {
-      IveCoreMobileUtilities.showAlert(context, title ?? 'Offline mode', message ?? 'This feature is not available in offline mode. Please connect to the internet to use this feature', 'OK');
+      IveCoreMobileUtilities.showAlert(context, title, message, 'OK');
     }
     return status == EnumConnectionStatus.connected;
   }

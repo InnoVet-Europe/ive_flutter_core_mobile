@@ -5,9 +5,9 @@ import 'package:sqflite/sqflite.dart';
 
 class MigrationsModel {
   MigrationsModel({
-    this.dbVersion,
-    this.migrationText,
-    this.appliedAtInt,
+    required this.dbVersion,
+    required this.migrationText,
+    required this.appliedAtInt,
   });
 
   final int dbVersion;
@@ -22,18 +22,14 @@ class MigrationsModel {
     json.decode(jsonResult).forEach(
       (dynamic jsonItem) {
         item = MigrationsModel(
-          dbVersion: jsonItem['dbVersion'],
-          migrationText: jsonItem['migrationText'],
-          appliedAtInt: jsonItem['appliedAtInt'],
+          dbVersion: jsonItem['dbVersion'] as int,
+          migrationText: jsonItem['migrationText'] as String,
+          appliedAtInt: jsonItem['appliedAtInt'] as int,
         );
 
         items.add(item);
       },
     );
-
-    if (items.isEmpty) {
-      return null;
-    }
 
     return items;
   }
@@ -52,7 +48,8 @@ class MigrationsTableHelper {
 
   // make this a singleton class
 
-  static final MigrationsTableHelper instance = MigrationsTableHelper._privateConstructor();
+  static final MigrationsTableHelper instance =
+      MigrationsTableHelper._privateConstructor();
 
   // SQL code to create the database table
   static Future<dynamic> createTable(Database db, int version) async {
@@ -66,22 +63,34 @@ class MigrationsTableHelper {
           )
           ''');
 
-    await db.execute('CREATE INDEX idx_${tableName}_id ON $tableName($colDbVersion);');
+    await db.execute(
+        'CREATE INDEX idx_${tableName}_id ON $tableName($colDbVersion);');
   }
 
   static Map<String, dynamic> toMap(MigrationsModel item) {
-    final Map<String, dynamic> map = <String, dynamic>{MigrationsTableHelper.colDbVersion: item.dbVersion, MigrationsTableHelper.colMigrationText: item.migrationText, MigrationsTableHelper.colAppliedAtInt: item.appliedAtInt};
+    final Map<String, dynamic> map = <String, dynamic>{
+      MigrationsTableHelper.colDbVersion: item.dbVersion,
+      MigrationsTableHelper.colMigrationText: item.migrationText,
+      MigrationsTableHelper.colAppliedAtInt: item.appliedAtInt
+    };
 
     return map;
   }
 
   static MigrationsModel fromMap(Map<String, dynamic> map) {
-    final MigrationsModel item = MigrationsModel(dbVersion: map[MigrationsTableHelper.colDbVersion], migrationText: map[MigrationsTableHelper.colMigrationText], appliedAtInt: map[MigrationsTableHelper.colAppliedAtInt]);
+    final MigrationsModel item = MigrationsModel(
+        dbVersion: map[MigrationsTableHelper.colDbVersion] as int,
+        migrationText: map[MigrationsTableHelper.colMigrationText] as String,
+        appliedAtInt: map[MigrationsTableHelper.colAppliedAtInt] as int);
 
     return item;
   }
 
-  static Future<bool> doDatabaseMigrations(Database db, List<MigrationsModel> migrationList, int currentDbVersion, int upgradedDbVersion) async {
+  static Future<bool> doDatabaseMigrations(
+      Database db,
+      List<MigrationsModel> migrationList,
+      int currentDbVersion,
+      int upgradedDbVersion) async {
     if (currentDbVersion == upgradedDbVersion) {
       return true;
     }
@@ -110,7 +119,8 @@ class MigrationsTableHelper {
           print('Migration #: ${mm.dbVersion.toString()}, statement #$line');
           print('Migration sql: $statement');
           await db.execute(statement);
-          print('Migration ${mm.dbVersion.toString()}, statement #$line succeeded');
+          print(
+              'Migration ${mm.dbVersion.toString()}, statement #$line succeeded');
           line++;
         }
       }
