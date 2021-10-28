@@ -1,6 +1,6 @@
 # This is a generated file; do not edit or check into version control.
-path_provider=/users/jameswhite/desktop/Development/flutter/.pub-cache/hosted/pub.dartlang.org/path_provider-2.0.1/
-path_provider_linux=/users/jameswhite/desktop/Development/flutter/.pub-cache/hosted/pub.dartlang.org/path_provider_linux-2.0.0/
-path_provider_macos=/users/jameswhite/desktop/Development/flutter/.pub-cache/hosted/pub.dartlang.org/path_provider_macos-2.0.0/
-path_provider_windows=/users/jameswhite/desktop/Development/flutter/.pub-cache/hosted/pub.dartlang.org/path_provider_windows-2.0.0/
-sqflite=/users/jameswhite/desktop/Development/flutter/.pub-cache/hosted/pub.dartlang.org/sqflite-2.0.0+3/
+path_provider=/Users/jameswhite/Desktop/Development.nosync/flutter/.pub-cache/hosted/pub.dartlang.org/path_provider-2.0.6/
+path_provider_linux=/Users/jameswhite/Desktop/Development.nosync/flutter/.pub-cache/hosted/pub.dartlang.org/path_provider_linux-2.1.0/
+path_provider_macos=/Users/jameswhite/Desktop/Development.nosync/flutter/.pub-cache/hosted/pub.dartlang.org/path_provider_macos-2.0.2/
+path_provider_windows=/Users/jameswhite/Desktop/Development.nosync/flutter/.pub-cache/hosted/pub.dartlang.org/path_provider_windows-2.0.3/
+sqflite=/Users/jameswhite/Desktop/Development.nosync/flutter/.pub-cache/hosted/pub.dartlang.org/sqflite-2.0.0+4/
