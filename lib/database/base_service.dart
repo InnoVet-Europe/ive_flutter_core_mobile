@@ -271,7 +271,7 @@ class BaseService {
     int lastPercentage = 0;
 
     // SQFLite is much more efficient when you batch database calls, so start a new batch
-    final Batch batch = db.batch();
+    Batch batch = db.batch();
 
     // loop through the resul sets
     for (int i = 0; i < jsonResultSets.length; i++) {
@@ -396,6 +396,7 @@ class BaseService {
         // every 250 records do a commit. I'm not sure if this will improve performance, but it's worth a try
         if ((j % 250) == 0) {
           await batch.commit(noResult: true);
+          batch = db.batch();
         }
       }
     }
