@@ -300,8 +300,8 @@ class BaseService {
             // loop through the map of data from the wire and see if any of them
             // were not present in the internal database (this indicates a field has been added to the server
             // and has not yet been added to the mobile app).
-            for (int i = 0; i < fieldsOnTheWire.length; i++) {
-              final String key = fieldsOnTheWire.keys.elementAt(i);
+            for (int k = 0; k < fieldsOnTheWire.length; k++) {
+              final String key = fieldsOnTheWire.keys.elementAt(k);
               if (!internalDbFields.containsKey(key)) {
                 print('$key field is on the wire but not in the internal database');
               }
@@ -310,8 +310,8 @@ class BaseService {
             // now loop through the data in the database and see if there are any field in SQFLite that
             // were not on the wire. (This is a much less common scenario than the one above. Once a field is
             // on the wire, we tend to leave it there.)
-            for (int i = 0; i < internalDbFields.length; i++) {
-              final String key = internalDbFields.keys.elementAt(i);
+            for (int k = 0; k < internalDbFields.length; k++) {
+              final String key = internalDbFields.keys.elementAt(k);
               if (!fieldsOnTheWire.containsKey(key)) {
                 print('$key field is in the internal database but not on the wire');
               }
@@ -391,6 +391,11 @@ class BaseService {
               deletedCounter++;
             }
           }
+        }
+
+        // every 250 records do a commit. I'm not sure if this will improve performance, but it's worth a try
+        if ((j % 250) == 0) {
+          await batch.commit(noResult: true);
         }
       }
     }
