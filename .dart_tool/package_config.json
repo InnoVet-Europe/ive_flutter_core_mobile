@@ -3,15 +3,15 @@
   "packages": [
     {
       "name": "_fe_analyzer_shared",
-      "rootUri": "file:///Users/jameswhite/.pub-cache/hosted/pub.dartlang.org/_fe_analyzer_shared-38.0.0",
+      "rootUri": "file:///Users/jameswhite/.pub-cache/hosted/pub.dartlang.org/_fe_analyzer_shared-41.0.0",
       "packageUri": "lib/",
       "languageVersion": "2.12"
     },
     {
       "name": "analyzer",
-      "rootUri": "file:///Users/jameswhite/.pub-cache/hosted/pub.dartlang.org/analyzer-3.4.1",
+      "rootUri": "file:///Users/jameswhite/.pub-cache/hosted/pub.dartlang.org/analyzer-4.2.0",
       "packageUri": "lib/",
-      "languageVersion": "2.14"
+      "languageVersion": "2.17"
     },
     {
       "name": "args",
@@ -45,13 +45,13 @@
     },
     {
       "name": "build_resolvers",
-      "rootUri": "file:///Users/jameswhite/.pub-cache/hosted/pub.dartlang.org/build_resolvers-2.0.8",
+      "rootUri": "file:///Users/jameswhite/.pub-cache/hosted/pub.dartlang.org/build_resolvers-2.0.9",
       "packageUri": "lib/",
       "languageVersion": "2.14"
     },
     {
       "name": "build_runner",
-      "rootUri": "file:///Users/jameswhite/.pub-cache/hosted/pub.dartlang.org/build_runner-2.1.10",
+      "rootUri": "file:///Users/jameswhite/.pub-cache/hosted/pub.dartlang.org/build_runner-2.1.11",
       "packageUri": "lib/",
       "languageVersion": "2.14"
     },
@@ -69,19 +69,13 @@
     },
     {
       "name": "built_value",
-      "rootUri": "file:///Users/jameswhite/.pub-cache/hosted/pub.dartlang.org/built_value-8.3.0",
+      "rootUri": "file:///Users/jameswhite/.pub-cache/hosted/pub.dartlang.org/built_value-8.3.3",
       "packageUri": "lib/",
       "languageVersion": "2.12"
     },
     {
       "name": "characters",
       "rootUri": "file:///Users/jameswhite/.pub-cache/hosted/pub.dartlang.org/characters-1.2.0",
-      "packageUri": "lib/",
-      "languageVersion": "2.12"
-    },
-    {
-      "name": "charcode",
-      "rootUri": "file:///Users/jameswhite/.pub-cache/hosted/pub.dartlang.org/charcode-1.3.1",
       "packageUri": "lib/",
       "languageVersion": "2.12"
     },
@@ -93,7 +87,7 @@
     },
     {
       "name": "clock",
-      "rootUri": "file:///Users/jameswhite/.pub-cache/hosted/pub.dartlang.org/clock-1.1.0",
+      "rootUri": "file:///Users/jameswhite/.pub-cache/hosted/pub.dartlang.org/clock-1.1.1",
       "packageUri": "lib/",
       "languageVersion": "2.12"
     },
@@ -111,7 +105,7 @@
     },
     {
       "name": "convert",
-      "rootUri": "file:///Users/jameswhite/.pub-cache/hosted/pub.dartlang.org/convert-3.0.1",
+      "rootUri": "file:///Users/jameswhite/.pub-cache/hosted/pub.dartlang.org/convert-3.0.2",
       "packageUri": "lib/",
       "languageVersion": "2.12"
     },
@@ -129,9 +123,9 @@
     },
     {
       "name": "ffi",
-      "rootUri": "file:///Users/jameswhite/.pub-cache/hosted/pub.dartlang.org/ffi-1.1.2",
+      "rootUri": "file:///Users/jameswhite/.pub-cache/hosted/pub.dartlang.org/ffi-2.0.1",
       "packageUri": "lib/",
-      "languageVersion": "2.12"
+      "languageVersion": "2.17"
     },
     {
       "name": "file",
@@ -153,7 +147,7 @@
     },
     {
       "name": "freezed",
-      "rootUri": "file:///Users/jameswhite/.pub-cache/hosted/pub.dartlang.org/freezed-2.0.3+1",
+      "rootUri": "file:///Users/jameswhite/.pub-cache/hosted/pub.dartlang.org/freezed-2.0.4",
       "packageUri": "lib/",
       "languageVersion": "2.14"
     },
@@ -165,15 +159,15 @@
     },
     {
       "name": "frontend_server_client",
-      "rootUri": "file:///Users/jameswhite/.pub-cache/hosted/pub.dartlang.org/frontend_server_client-2.1.2",
+      "rootUri": "file:///Users/jameswhite/.pub-cache/hosted/pub.dartlang.org/frontend_server_client-2.1.3",
       "packageUri": "lib/",
       "languageVersion": "2.12"
     },
     {
       "name": "glob",
-      "rootUri": "file:///Users/jameswhite/.pub-cache/hosted/pub.dartlang.org/glob-2.0.2",
+      "rootUri": "file:///Users/jameswhite/.pub-cache/hosted/pub.dartlang.org/glob-2.1.0",
       "packageUri": "lib/",
-      "languageVersion": "2.14"
+      "languageVersion": "2.15"
     },
     {
       "name": "graphs",
@@ -183,13 +177,13 @@
     },
     {
       "name": "http_multi_server",
-      "rootUri": "file:///Users/jameswhite/.pub-cache/hosted/pub.dartlang.org/http_multi_server-3.2.0",
+      "rootUri": "file:///Users/jameswhite/.pub-cache/hosted/pub.dartlang.org/http_multi_server-3.2.1",
       "packageUri": "lib/",
       "languageVersion": "2.12"
     },
     {
       "name": "http_parser",
-      "rootUri": "file:///Users/jameswhite/.pub-cache/hosted/pub.dartlang.org/http_parser-4.0.0",
+      "rootUri": "file:///Users/jameswhite/.pub-cache/hosted/pub.dartlang.org/http_parser-4.0.1",
       "packageUri": "lib/",
       "languageVersion": "2.12"
     },
@@ -231,7 +225,7 @@
     },
     {
       "name": "matcher",
-      "rootUri": "file:///Users/jameswhite/.pub-cache/hosted/pub.dartlang.org/matcher-0.12.11",
+      "rootUri": "file:///Users/jameswhite/.pub-cache/hosted/pub.dartlang.org/matcher-0.12.12",
       "packageUri": "lib/",
       "languageVersion": "2.12"
     },
@@ -255,37 +249,37 @@
     },
     {
       "name": "package_config",
-      "rootUri": "file:///Users/jameswhite/.pub-cache/hosted/pub.dartlang.org/package_config-2.0.2",
+      "rootUri": "file:///Users/jameswhite/.pub-cache/hosted/pub.dartlang.org/package_config-2.1.0",
       "packageUri": "lib/",
       "languageVersion": "2.12"
     },
     {
       "name": "path",
-      "rootUri": "file:///Users/jameswhite/.pub-cache/hosted/pub.dartlang.org/path-1.8.1",
+      "rootUri": "file:///Users/jameswhite/.pub-cache/hosted/pub.dartlang.org/path-1.8.2",
       "packageUri": "lib/",
       "languageVersion": "2.12"
     },
     {
       "name": "path_provider",
-      "rootUri": "file:///Users/jameswhite/.pub-cache/hosted/pub.dartlang.org/path_provider-2.0.10",
+      "rootUri": "file:///Users/jameswhite/.pub-cache/hosted/pub.dartlang.org/path_provider-2.0.11",
       "packageUri": "lib/",
       "languageVersion": "2.14"
     },
     {
       "name": "path_provider_android",
-      "rootUri": "file:///Users/jameswhite/.pub-cache/hosted/pub.dartlang.org/path_provider_android-2.0.14",
+      "rootUri": "file:///Users/jameswhite/.pub-cache/hosted/pub.dartlang.org/path_provider_android-2.0.16",
       "packageUri": "lib/",
       "languageVersion": "2.14"
     },
     {
       "name": "path_provider_ios",
-      "rootUri": "file:///Users/jameswhite/.pub-cache/hosted/pub.dartlang.org/path_provider_ios-2.0.9",
+      "rootUri": "file:///Users/jameswhite/.pub-cache/hosted/pub.dartlang.org/path_provider_ios-2.0.10",
       "packageUri": "lib/",
       "languageVersion": "2.14"
     },
     {
       "name": "path_provider_linux",
-      "rootUri": "file:///Users/jameswhite/.pub-cache/hosted/pub.dartlang.org/path_provider_linux-2.1.6",
+      "rootUri": "file:///Users/jameswhite/.pub-cache/hosted/pub.dartlang.org/path_provider_linux-2.1.7",
       "packageUri": "lib/",
       "languageVersion": "2.12"
     },
@@ -303,9 +297,9 @@
     },
     {
       "name": "path_provider_windows",
-      "rootUri": "file:///Users/jameswhite/.pub-cache/hosted/pub.dartlang.org/path_provider_windows-2.0.6",
+      "rootUri": "file:///Users/jameswhite/.pub-cache/hosted/pub.dartlang.org/path_provider_windows-2.1.0",
       "packageUri": "lib/",
-      "languageVersion": "2.12"
+      "languageVersion": "2.17"
     },
     {
       "name": "platform",
@@ -321,7 +315,7 @@
     },
     {
       "name": "pool",
-      "rootUri": "file:///Users/jameswhite/.pub-cache/hosted/pub.dartlang.org/pool-1.5.0",
+      "rootUri": "file:///Users/jameswhite/.pub-cache/hosted/pub.dartlang.org/pool-1.5.1",
       "packageUri": "lib/",
       "languageVersion": "2.12"
     },
@@ -345,15 +339,15 @@
     },
     {
       "name": "shelf",
-      "rootUri": "file:///Users/jameswhite/.pub-cache/hosted/pub.dartlang.org/shelf-1.3.0",
+      "rootUri": "file:///Users/jameswhite/.pub-cache/hosted/pub.dartlang.org/shelf-1.3.1",
       "packageUri": "lib/",
       "languageVersion": "2.16"
     },
     {
       "name": "shelf_web_socket",
-      "rootUri": "file:///Users/jameswhite/.pub-cache/hosted/pub.dartlang.org/shelf_web_socket-1.0.1",
+      "rootUri": "file:///Users/jameswhite/.pub-cache/hosted/pub.dartlang.org/shelf_web_socket-1.0.2",
       "packageUri": "lib/",
-      "languageVersion": "2.12"
+      "languageVersion": "2.14"
     },
     {
       "name": "sky_engine",
@@ -381,7 +375,7 @@
     },
     {
       "name": "sqflite",
-      "rootUri": "file:///Users/jameswhite/.pub-cache/hosted/pub.dartlang.org/sqflite-2.0.2+1",
+      "rootUri": "file:///Users/jameswhite/.pub-cache/hosted/pub.dartlang.org/sqflite-2.0.3",
       "packageUri": "lib/",
       "languageVersion": "2.16"
     },
@@ -423,7 +417,7 @@
     },
     {
       "name": "term_glyph",
-      "rootUri": "file:///Users/jameswhite/.pub-cache/hosted/pub.dartlang.org/term_glyph-1.2.0",
+      "rootUri": "file:///Users/jameswhite/.pub-cache/hosted/pub.dartlang.org/term_glyph-1.2.1",
       "packageUri": "lib/",
       "languageVersion": "2.12"
     },
@@ -459,9 +453,9 @@
     },
     {
       "name": "win32",
-      "rootUri": "file:///Users/jameswhite/.pub-cache/hosted/pub.dartlang.org/win32-2.5.2",
+      "rootUri": "file:///Users/jameswhite/.pub-cache/hosted/pub.dartlang.org/win32-2.7.0",
       "packageUri": "lib/",
-      "languageVersion": "2.15"
+      "languageVersion": "2.17"
     },
     {
       "name": "xdg_directories",
@@ -482,7 +476,7 @@
       "languageVersion": "2.14"
     }
   ],
-  "generated": "2022-05-12T19:36:49.626477Z",
+  "generated": "2022-07-06T17:03:22.627696Z",
   "generator": "pub",
-  "generatorVersion": "2.17.0"
+  "generatorVersion": "2.17.5"
 }

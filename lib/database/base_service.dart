@@ -252,7 +252,7 @@ class BaseService {
   /// ToDo (DevTeam): ultimately we need to find a way when a record has been deleted on the mobile device to make sure it does
   /// not keep getting sent over the wire. This can be challenging because one record on the central server may exist in many
   /// mobile devices. For now, we try to avoid deleting records if possible because this issue has not been addressed.
-  Future<int> bulkUpdateDatabase(BaseTableHelper tableHelper, String tableName, String rawResults, Database db, {Function? informUser}) async {
+  Future<int> bulkUpdateDatabase(BaseTableHelper tableHelper, String tableName, String rawResults, Database db, {Function? informUser, bool suppressDeletes = false, String batchNumber = ''}) async {
     int updateCounter = 0;
     int insertCounter = 0;
     int deletedCounter = 0;
@@ -326,7 +326,11 @@ class BaseService {
         // passed in, notify the user of our progress
         if ((percentage != lastPercentage) && (informUser != null)) {
           lastPercentage = percentage;
-          informUser('Loading ${tableHelper.humanReadableTableName}\r\n$percentage% complete');
+          if (batchNumber.isNotEmpty) {
+            informUser('Loading ${tableHelper.humanReadableTableName}\r\nbatch $batchNumber\r\n$percentage% complete');
+          } else {
+            informUser('Loading ${tableHelper.humanReadableTableName}\r\n$percentage% complete');
+          }
         }
 
         // Now that the housekeeping is done, let's normalize the data from the wire
@@ -359,7 +363,7 @@ class BaseService {
         final List<Map<String, dynamic>> localDbRecord = await db.rawQuery(query);
 
         // has the record been marked as deleted?
-        if ((jsonResults[j]['removed'] ?? 0) == 0) {
+        if (suppressDeletes || (jsonResults[j]['removed'] ?? 0) == 0) {
           // nope, the remote record has not been marked as deleted, so process either an insert or update
 
           // (just a little error check here to make sure that the remoteDb table contains a removed record)
