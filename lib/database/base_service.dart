@@ -158,7 +158,15 @@ class BaseService {
   /// to be inserted into any table. In this case, we need to return the adHocData to the calling
   /// function.
 
-  Future<List<dynamic>> updateSqlTablesFromJson(String jsonResults, List<BaseTableHelper> tables, Database db, dynamic appDomainType, {Function? informUser}) async {
+  Future<List<dynamic>> updateSqlTablesFromJson(
+    String jsonResults,
+    List<BaseTableHelper> tables,
+    Database db,
+    dynamic appDomainType, {
+    Function? informUser,
+    bool suppressDeletes = false,
+    String batchText = '',
+  }) async {
     // Some API calls return adHocData that is not intended to be inserted into the
     // internal SQFLite DB. This data can be used for a variety of reasons within the app.
     // Get ready to return some ad hoc data.
@@ -198,13 +206,7 @@ class BaseService {
               isProcessed = true;
               // we found a table that matches the received data, so go ahead
               // and do a bulk insert into the SQFLite DB.
-              await bulkUpdateDatabase(
-                helper,
-                helper.getTableName(appDomainType),
-                '[$ms]',
-                db,
-                informUser: informUser,
-              );
+              await bulkUpdateDatabase(helper, helper.getTableName(appDomainType), '[$ms]', db, informUser: informUser, suppressDeletes: suppressDeletes, batchText: batchText);
             }
           }
         }
@@ -252,7 +254,7 @@ class BaseService {
   /// ToDo (DevTeam): ultimately we need to find a way when a record has been deleted on the mobile device to make sure it does
   /// not keep getting sent over the wire. This can be challenging because one record on the central server may exist in many
   /// mobile devices. For now, we try to avoid deleting records if possible because this issue has not been addressed.
-  Future<int> bulkUpdateDatabase(BaseTableHelper tableHelper, String tableName, String rawResults, Database db, {Function? informUser, bool suppressDeletes = false, String batchNumber = ''}) async {
+  Future<int> bulkUpdateDatabase(BaseTableHelper tableHelper, String tableName, String rawResults, Database db, {Function? informUser, bool suppressDeletes = false, String batchText = ''}) async {
     int updateCounter = 0;
     int insertCounter = 0;
     int deletedCounter = 0;
@@ -326,8 +328,8 @@ class BaseService {
         // passed in, notify the user of our progress
         if ((percentage != lastPercentage) && (informUser != null)) {
           lastPercentage = percentage;
-          if (batchNumber.isNotEmpty) {
-            informUser('Loading ${tableHelper.humanReadableTableName}\r\nbatch $batchNumber\r\n$percentage% complete');
+          if (batchText.isNotEmpty) {
+            informUser('Loading ${tableHelper.humanReadableTableName}\r\n$batchText\r\n$percentage% complete');
           } else {
             informUser('Loading ${tableHelper.humanReadableTableName}\r\n$percentage% complete');
           }
