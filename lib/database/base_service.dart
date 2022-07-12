@@ -25,9 +25,25 @@ abstract class BaseTableHelper {
 
   // cause a force refresh of the cache every 3 years. This
   // effectively prevents cache refreshes (Needs implementation)
-  BaseTableHelper({this.cacheDuration = 365 * 3 * 86400000, this.humanReadableTableName = '<no human readable table name>', this.remoteDbId = '<no remote db ID>'});
+  BaseTableHelper({
+    this.cacheDuration = 365 * 3 * 86400000,
+    this.humanReadableTableName = '<no human readable table name>',
+    this.remoteDbId = '<no remote db ID>',
+    this.pageSize = 250,
+    this.pageFlag = 0,
+  });
 
   num cacheDuration;
+
+  /// [pageFlag] is a bit field that identifies this table within the
+  /// calling application.
+  int pageFlag;
+
+  /// [pageSize] is an integer that determines how many records will be in o
+  /// page of data feteched from the database at one time. If the number
+  /// of records equals the page size. The system knows to issue another
+  /// request.
+  int pageSize;
 
   /// [humanReadableTableName] is a string that holds the name of the table
   /// in human readable form. This is mainly used during app initializaiton
@@ -158,7 +174,7 @@ class BaseService {
   /// to be inserted into any table. In this case, we need to return the adHocData to the calling
   /// function.
 
-  Future<List<dynamic>> updateSqlTablesFromJson(
+  Future<Map<String, dynamic>> updateSqlTablesFromJson(
     String jsonResults,
     List<BaseTableHelper> tables,
     Database db,
@@ -171,6 +187,8 @@ class BaseService {
     // internal SQFLite DB. This data can be used for a variety of reasons within the app.
     // Get ready to return some ad hoc data.
     List<dynamic> adHocData = <dynamic>[]; // prepare to return an empty list instead of null
+
+    int tablesToPage = 0;
 
     // Sometimes, the results on the wire consist of an array of result sets from many different
     // SQL tables on the remote DB. We want to
@@ -206,7 +224,12 @@ class BaseService {
               isProcessed = true;
               // we found a table that matches the received data, so go ahead
               // and do a bulk insert into the SQFLite DB.
-              await bulkUpdateDatabase(helper, helper.getTableName(appDomainType), '[$ms]', db, informUser: informUser, suppressDeletes: suppressDeletes, batchText: batchText);
+              final bool additionalPageSyncRequired =
+                  await bulkUpdateDatabase(helper, helper.getTableName(appDomainType), '[$ms]', db, informUser: informUser, suppressDeletes: suppressDeletes, batchText: batchText);
+
+              if (additionalPageSyncRequired) {
+                tablesToPage |= helper.pageFlag;
+              }
             }
           }
         }
@@ -244,7 +267,10 @@ class BaseService {
       }
     }
 
-    return adHocData;
+    return <String, dynamic>{
+      'adHocData': adHocData,
+      'tablesToPage': tablesToPage,
+    };
   }
 
   /// [_bulkUpdateDatabase] is one of the most important functions in the replication system.
@@ -254,12 +280,14 @@ class BaseService {
   /// ToDo (DevTeam): ultimately we need to find a way when a record has been deleted on the mobile device to make sure it does
   /// not keep getting sent over the wire. This can be challenging because one record on the central server may exist in many
   /// mobile devices. For now, we try to avoid deleting records if possible because this issue has not been addressed.
-  Future<int> bulkUpdateDatabase(BaseTableHelper tableHelper, String tableName, String rawResults, Database db, {Function? informUser, bool suppressDeletes = false, String batchText = ''}) async {
+  Future<bool> bulkUpdateDatabase(BaseTableHelper tableHelper, String tableName, String rawResults, Database db, {Function? informUser, bool suppressDeletes = false, String batchText = ''}) async {
     int updateCounter = 0;
     int insertCounter = 0;
     int deletedCounter = 0;
 
     bool? doNormalizeMap;
+
+    bool additionalPageAvailable = false;
 
     // results will come in as an array of json result sets, typically there will be only
     // one result set that contains an array of json objects, but in exceptional cases
@@ -279,6 +307,8 @@ class BaseService {
     for (int i = 0; i < jsonResultSets.length; i++) {
       final List<dynamic> jsonResults = jsonResultSets[i] as List<dynamic>;
       print('$tableName results received from cloud = ${jsonResults.length}');
+
+      additionalPageAvailable = jsonResults.length == tableHelper.pageSize;
 
       // then loop through the records in each result set
       for (int j = 0; j < jsonResults.length; j++) {
@@ -399,11 +429,11 @@ class BaseService {
           }
         }
 
-        // every 250 records do a commit. I'm not sure if this will improve performance, but it's worth a try
-        if ((j % 250) == 0) {
-          await batch.commit(noResult: true);
-          batch = db.batch();
-        }
+        // // every 250 records do a commit. I'm not sure if this will improve performance, but it's worth a try
+        // if ((j % 250) == 0) {
+        //   await batch.commit(noResult: true);
+        //   batch = db.batch();
+        // }
       }
     }
 
@@ -412,7 +442,7 @@ class BaseService {
 
     // and debug print the results
     print('$insertCounter $tableName records inserted, $updateCounter $tableName records updated, $deletedCounter $tableName records deleted');
-    return insertCounter;
+    return additionalPageAvailable;
   }
 
   Future<List<Map<String, dynamic>>> getSqlFieldsById(BaseTableHelper tableHelper, Database db, String id, dynamic appDomainType, {String? secondaryId, String? tertiaryId}) async {
