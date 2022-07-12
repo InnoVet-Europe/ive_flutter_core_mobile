@@ -174,7 +174,15 @@ class BaseService {
   /// to be inserted into any table. In this case, we need to return the adHocData to the calling
   /// function.
 
-  Future<List<dynamic>> updateSqlTablesFromJsonWithAdHocData(String jsonResults, List<BaseTableHelper> tables, Database db, dynamic appDomainType, {Function? informUser}) async {
+  Future<List<dynamic>> updateSqlTablesFromJsonWithAdHocData(
+    String jsonResults,
+    List<BaseTableHelper> tables,
+    Database db,
+    dynamic appDomainType, {
+    Function? informUser,
+    bool suppressDeletes = false,
+    String batchText = '',
+  }) async {
     // Some API calls return adHocData that is not intended to be inserted into the
     // internal SQFLite DB. This data can be used for a variety of reasons within the app.
     // Get ready to return some ad hoc data.
@@ -214,13 +222,7 @@ class BaseService {
               isProcessed = true;
               // we found a table that matches the received data, so go ahead
               // and do a bulk insert into the SQFLite DB.
-              await bulkUpdateDatabase(
-                helper,
-                helper.getTableName(appDomainType),
-                '[$ms]',
-                db,
-                informUser: informUser,
-              );
+              await bulkUpdateDatabase(helper, helper.getTableName(appDomainType), '[$ms]', db, informUser: informUser, suppressDeletes: suppressDeletes, batchText: batchText);
             }
           }
         }
