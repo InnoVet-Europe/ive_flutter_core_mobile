@@ -166,7 +166,7 @@ class BaseService {
     });
   }
 
-  /// The [updateSqlTablesFromJson] function is the publicly accessible function for updating data in
+  /// The [updateSqlTablesFromJsonWithAdHocData] function is the publicly accessible function for updating data in
   /// the SQFLite database. This is the only mechanism used to get data from the wire into the
   /// internal SQFLite DB. We typically call this function with the raw results received from
   /// the wire. These results can contain data from many tables, so we need to be able to
@@ -174,7 +174,123 @@ class BaseService {
   /// to be inserted into any table. In this case, we need to return the adHocData to the calling
   /// function.
 
-  Future<Map<String, dynamic>> updateSqlTablesFromJson(
+  Future<List<dynamic>> updateSqlTablesFromJsonWithAdHocData(String jsonResults, List<BaseTableHelper> tables, Database db, dynamic appDomainType, {Function? informUser}) async {
+    // Some API calls return adHocData that is not intended to be inserted into the
+    // internal SQFLite DB. This data can be used for a variety of reasons within the app.
+    // Get ready to return some ad hoc data.
+    List<dynamic> adHocData = <dynamic>[]; // prepare to return an empty list instead of null
+
+    // Sometimes, the results on the wire consist of an array of result sets from many different
+    // SQL tables on the remote DB. We want to
+    // process them one at a time, so if that's the case, remove the outer brackets
+    // from the result string
+    if (jsonResults.startsWith('[[')) {
+      jsonResults = jsonResults.substring(1, jsonResults.length - 1);
+    }
+
+    // using REGEX, pull out each of the result sets from the data
+    final RegExp r = RegExp(r'\[(\{(.*?)\})\]', multiLine: true);
+    final Iterable<Match> matches = r.allMatches(jsonResults);
+    for (int i = 0; i < matches.length; i++) {
+      // grab a single result set
+      final String? ms = matches.elementAt(i).group(0);
+
+      bool isProcessed = false;
+
+      if (ms != null) {
+        // are we processing adHocData?
+        if (ms.startsWith(r'[{"adHocDataId"')) {
+          isProcessed = true;
+          final List<dynamic> adHocItems = jsonDecode(ms) as List<dynamic>;
+          if (adHocItems.isNotEmpty) {
+            adHocData = adHocItems;
+          }
+        } else {
+          // if we are not processing adHocData,
+          // look through the tables that we are allowed to insert into and see if
+          // we can find which one has the same remoteDbId as is present in the received data
+          for (final BaseTableHelper helper in tables) {
+            if (ms.startsWith('[{"${helper.remoteDbId}"')) {
+              isProcessed = true;
+              // we found a table that matches the received data, so go ahead
+              // and do a bulk insert into the SQFLite DB.
+              await bulkUpdateDatabase(
+                helper,
+                helper.getTableName(appDomainType),
+                '[$ms]',
+                db,
+                informUser: informUser,
+              );
+            }
+          }
+        }
+
+        if (!isProcessed) {
+          // in the SQL stored procedures that process the data, sometimes we run across an error
+          // (e.g. such as an invalid access token). This data will contain an arbitrary 'errorId'
+          // field that serves as a flag that an error has occurred. When this happens, put the
+          // error information into the adHocData variable and return that to the caller.
+          if (ms.startsWith(r'[{"errorId"')) {
+            final List<dynamic> errorItems = jsonDecode(ms) as List<dynamic>;
+            if (errorItems.isNotEmpty) {
+              adHocData = errorItems;
+            }
+            print('server messages received');
+          } else {
+            // There is a chance that the server returned data that this version
+            // of the software is not expecting, such as in cases when new features
+            // have been added to new releases and this is an older release
+            // in these cases, just ignore the extra data.
+            // It is also possible that we have received data that the app developer
+            // has chosen to ignore by not passing in the appropriate table into the
+            // list of tables when this function was called.
+
+            // Just to be safe, do a debug print anyway
+            // and remind the developer that the first field in the result set must be
+            // the primary key of the remote DB so we can match the internal table with
+            // the received data.
+            print('The following data was not inserted into the device DB');
+            print('Please ensure that you are passing in all tables that you want processed by this function in the "tables" parameter');
+            print('Also, it is required that the primary key for the table to be the first field in the JSON data. Please check the JSON data format.');
+            print(ms);
+          }
+        }
+      }
+    }
+
+    return adHocData;
+  }
+
+  Future<List<Map<String, dynamic>>> getSqlFieldsById(BaseTableHelper tableHelper, Database db, String id, dynamic appDomainType, {String? secondaryId, String? tertiaryId}) async {
+    final String tableName = tableHelper.getTableName(appDomainType);
+
+    String query;
+
+    if ((secondaryId == null) || (secondaryId.isEmpty)) {
+      query = '''
+          SELECT *
+          FROM $tableName
+          WHERE ${tableHelper.remoteDbId} = "$id"
+          ''';
+    } else if ((tertiaryId == null) || (tertiaryId.isEmpty)) {
+      query = '''
+          SELECT *
+          FROM $tableName
+          WHERE ${tableHelper.remoteDbId} = "$id" AND ${tableHelper.secondaryKey} = "$secondaryId" 
+          ''';
+    } else {
+      query = '''
+          SELECT *
+          FROM $tableName
+          WHERE ${tableHelper.remoteDbId} = "$id" AND ${tableHelper.secondaryKey} = "$secondaryId" AND ${tableHelper.tertiaryKey} = "$tertiaryId" 
+          ''';
+    }
+
+    final List<Map<String, dynamic>> results = await db.rawQuery(query);
+    return results;
+  }
+
+  Future<int> updateSqlTablesFromJsonWithPaging(
     String jsonResults,
     List<BaseTableHelper> tables,
     Database db,
@@ -267,10 +383,7 @@ class BaseService {
       }
     }
 
-    return <String, dynamic>{
-      'adHocData': adHocData,
-      'tablesToPage': tablesToPage,
-    };
+    return tablesToPage;
   }
 
   /// [_bulkUpdateDatabase] is one of the most important functions in the replication system.
@@ -301,7 +414,7 @@ class BaseService {
     int lastPercentage = 0;
 
     // SQFLite is much more efficient when you batch database calls, so start a new batch
-    Batch batch = db.batch();
+    final Batch batch = db.batch();
 
     // loop through the resul sets
     for (int i = 0; i < jsonResultSets.length; i++) {
@@ -443,34 +556,5 @@ class BaseService {
     // and debug print the results
     print('$insertCounter $tableName records inserted, $updateCounter $tableName records updated, $deletedCounter $tableName records deleted');
     return additionalPageAvailable;
-  }
-
-  Future<List<Map<String, dynamic>>> getSqlFieldsById(BaseTableHelper tableHelper, Database db, String id, dynamic appDomainType, {String? secondaryId, String? tertiaryId}) async {
-    final String tableName = tableHelper.getTableName(appDomainType);
-
-    String query;
-
-    if ((secondaryId == null) || (secondaryId.isEmpty)) {
-      query = '''
-          SELECT *
-          FROM $tableName
-          WHERE ${tableHelper.remoteDbId} = "$id"
-          ''';
-    } else if ((tertiaryId == null) || (tertiaryId.isEmpty)) {
-      query = '''
-          SELECT *
-          FROM $tableName
-          WHERE ${tableHelper.remoteDbId} = "$id" AND ${tableHelper.secondaryKey} = "$secondaryId" 
-          ''';
-    } else {
-      query = '''
-          SELECT *
-          FROM $tableName
-          WHERE ${tableHelper.remoteDbId} = "$id" AND ${tableHelper.secondaryKey} = "$secondaryId" AND ${tableHelper.tertiaryKey} = "$tertiaryId" 
-          ''';
-    }
-
-    final List<Map<String, dynamic>> results = await db.rawQuery(query);
-    return results;
   }
 }
