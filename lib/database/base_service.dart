@@ -30,14 +30,14 @@ abstract class BaseTableHelper {
     this.humanReadableTableName = '<no human readable table name>',
     this.remoteDbId = '<no remote db ID>',
     this.pageSize = 250,
-    this.pageFlag = 0,
+    this.tableFlag = 0,
   });
 
   num cacheDuration;
 
-  /// [pageFlag] is a bit field that identifies this table within the
+  /// [tableFlag] is a bit field that identifies this table within the
   /// calling application.
-  int pageFlag;
+  int tableFlag;
 
   /// [pageSize] is an integer that determines how many records will be in o
   /// page of data feteched from the database at one time. If the number
@@ -346,7 +346,7 @@ class BaseService {
                   await bulkUpdateDatabase(helper, helper.getTableName(appDomainType), '[$ms]', db, informUser: informUser, suppressDeletes: suppressDeletes, batchText: batchText);
 
               if (additionalPageSyncRequired) {
-                tablesToPage |= helper.pageFlag;
+                tablesToPage |= helper.tableFlag;
               }
             }
           }
