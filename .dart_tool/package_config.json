@@ -33,9 +33,9 @@
     },
     {
       "name": "build_config",
-      "rootUri": "file:///Users/jameswhite/.pub-cache/hosted/pub.dartlang.org/build_config-1.0.0",
+      "rootUri": "file:///Users/jameswhite/.pub-cache/hosted/pub.dartlang.org/build_config-1.1.0",
       "packageUri": "lib/",
-      "languageVersion": "2.12"
+      "languageVersion": "2.14"
     },
     {
       "name": "build_daemon",
@@ -51,7 +51,7 @@
     },
     {
       "name": "build_runner",
-      "rootUri": "file:///Users/jameswhite/.pub-cache/hosted/pub.dartlang.org/build_runner-2.1.11",
+      "rootUri": "file:///Users/jameswhite/.pub-cache/hosted/pub.dartlang.org/build_runner-2.2.0",
       "packageUri": "lib/",
       "languageVersion": "2.14"
     },
@@ -69,7 +69,7 @@
     },
     {
       "name": "built_value",
-      "rootUri": "file:///Users/jameswhite/.pub-cache/hosted/pub.dartlang.org/built_value-8.3.3",
+      "rootUri": "file:///Users/jameswhite/.pub-cache/hosted/pub.dartlang.org/built_value-8.4.0",
       "packageUri": "lib/",
       "languageVersion": "2.12"
     },
@@ -147,13 +147,13 @@
     },
     {
       "name": "freezed",
-      "rootUri": "file:///Users/jameswhite/.pub-cache/hosted/pub.dartlang.org/freezed-2.0.4",
+      "rootUri": "file:///Users/jameswhite/.pub-cache/hosted/pub.dartlang.org/freezed-2.1.0+1",
       "packageUri": "lib/",
-      "languageVersion": "2.14"
+      "languageVersion": "2.17"
     },
     {
       "name": "freezed_annotation",
-      "rootUri": "file:///Users/jameswhite/.pub-cache/hosted/pub.dartlang.org/freezed_annotation-2.0.3",
+      "rootUri": "file:///Users/jameswhite/.pub-cache/hosted/pub.dartlang.org/freezed_annotation-2.1.0",
       "packageUri": "lib/",
       "languageVersion": "2.14"
     },
@@ -207,13 +207,13 @@
     },
     {
       "name": "json_annotation",
-      "rootUri": "file:///Users/jameswhite/.pub-cache/hosted/pub.dartlang.org/json_annotation-4.5.0",
+      "rootUri": "file:///Users/jameswhite/.pub-cache/hosted/pub.dartlang.org/json_annotation-4.6.0",
       "packageUri": "lib/",
       "languageVersion": "2.14"
     },
     {
       "name": "json_serializable",
-      "rootUri": "file:///Users/jameswhite/.pub-cache/hosted/pub.dartlang.org/json_serializable-6.2.0",
+      "rootUri": "file:///Users/jameswhite/.pub-cache/hosted/pub.dartlang.org/json_serializable-6.3.1",
       "packageUri": "lib/",
       "languageVersion": "2.14"
     },
@@ -369,7 +369,7 @@
     },
     {
       "name": "source_span",
-      "rootUri": "file:///Users/jameswhite/.pub-cache/hosted/pub.dartlang.org/source_span-1.9.0",
+      "rootUri": "file:///Users/jameswhite/.pub-cache/hosted/pub.dartlang.org/source_span-1.9.1",
       "packageUri": "lib/",
       "languageVersion": "2.14"
     },
@@ -476,7 +476,7 @@
       "languageVersion": "2.14"
     }
   ],
-  "generated": "2022-07-12T15:08:03.446834Z",
+  "generated": "2022-07-21T20:16:52.663239Z",
   "generator": "pub",
-  "generatorVersion": "2.17.5"
+  "generatorVersion": "2.17.6"
 }
