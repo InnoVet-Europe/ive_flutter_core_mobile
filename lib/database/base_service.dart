@@ -492,7 +492,7 @@ class BaseService {
 
         // since we are doing a bulk insert / update of the database, we need to append the 'updatedAtValue'
         fieldsOnTheWire.addAll(<String, dynamic>{
-          'updatedAtValue': DateTime.parse(fieldsOnTheWire['updatedAt'].toString().substring(0, 23)).millisecondsSinceEpoch,
+          'updatedAtValue': DateTime.parse(fieldsOnTheWire['updatedAt'].toString().padRight(28, '0')).microsecondsSinceEpoch,
         });
 
         String query;
