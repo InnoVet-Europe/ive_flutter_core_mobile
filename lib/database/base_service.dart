@@ -153,8 +153,8 @@ class BaseService {
   /// the table was updated. This is used for database replication.
   Future<int> getLastUpdatedTime(Database db, BaseTableHelper tableHelper, String tableName, String colUpdatedAtValue) async {
     final List<Map<String, dynamic>> table = await db.rawQuery('SELECT MAX($colUpdatedAtValue) AS maxDate FROM $tableName');
-    final int timeValue = table.first['maxDate'] as int;
-    return timeValue;
+    final int? timeValue = table.first['maxDate'] as int?;
+    return timeValue ?? 946684800000000; // if it's null, return 2000-1-1
   }
 
   /// [clearTable] deletes all records from a SQFLite table
