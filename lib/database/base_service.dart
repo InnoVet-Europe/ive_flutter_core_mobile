@@ -151,9 +151,9 @@ class BaseService {
 
   /// [getLastUpdatedTime] returns a numeric value that represents the latest time a record contained in
   /// the table was updated. This is used for database replication.
-  Future<num> getLastUpdatedTime(Database db, BaseTableHelper tableHelper, String tableName, String colUpdatedAtValue) async {
+  Future<int> getLastUpdatedTime(Database db, BaseTableHelper tableHelper, String tableName, String colUpdatedAtValue) async {
     final List<Map<String, dynamic>> table = await db.rawQuery('SELECT MAX($colUpdatedAtValue) AS maxDate FROM $tableName');
-    final num timeValue = table.first['maxDate'] as num;
+    final int timeValue = table.first['maxDate'] as int;
     return timeValue;
   }
 
@@ -392,7 +392,7 @@ class BaseService {
   /// For any given table [_bulkUpdateDatabase] takes raw json results in a string, checks to see that
   /// the structure of that data matches the internal db using [normalizeMap] and then does a bulk update
   /// of the SQFlite table.
-  /// ToDo (DevTeam): ultimately we need to find a way when a record has been deleted on the mobile device to make sure it does
+  /// TODO (DevTeam): ultimately we need to find a way when a record has been deleted on the mobile device to make sure it does
   /// not keep getting sent over the wire. This can be challenging because one record on the central server may exist in many
   /// mobile devices. For now, we try to avoid deleting records if possible because this issue has not been addressed.
   Future<bool> bulkUpdateDatabase(BaseTableHelper tableHelper, String tableName, String rawResults, Database db, {Function? informUser, bool suppressDeletes = false, String batchText = ''}) async {
