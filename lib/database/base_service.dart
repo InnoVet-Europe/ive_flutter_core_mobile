@@ -301,10 +301,7 @@ class BaseService {
     bool suppressDeletes = false,
     String batchText = '',
   }) async {
-    // Some API calls return adHocData that is not intended to be inserted into the
-    // internal SQFLite DB. This data can be used for a variety of reasons within the app.
-    // Get ready to return some ad hoc data.
-    List<dynamic> adHocData = <dynamic>[]; // prepare to return an empty list instead of null
+    // NOTE: Paged queries do not return adHocData
 
     int tablesToPage = 0;
 
@@ -329,10 +326,6 @@ class BaseService {
         // are we processing adHocData?
         if (ms.startsWith(r'[{"adHocDataId"')) {
           isProcessed = true;
-          final List<dynamic> adHocItems = jsonDecode(ms) as List<dynamic>;
-          if (adHocItems.isNotEmpty) {
-            adHocData = adHocItems;
-          }
         } else {
           // if we are not processing adHocData,
           // look through the tables that we are allowed to insert into and see if
@@ -358,11 +351,11 @@ class BaseService {
           // field that serves as a flag that an error has occurred. When this happens, put the
           // error information into the adHocData variable and return that to the caller.
           if (ms.startsWith(r'[{"errorId"')) {
-            final List<dynamic> errorItems = jsonDecode(ms) as List<dynamic>;
-            if (errorItems.isNotEmpty) {
-              adHocData = errorItems;
-            }
-            print('server messages received');
+            // final List<dynamic> errorItems = jsonDecode(ms) as List<dynamic>;
+            // if (errorItems.isNotEmpty) {
+            //   adHocData = errorItems;
+            // }
+            // print('server messages received');
           } else {
             // There is a chance that the server returned data that this version
             // of the software is not expecting, such as in cases when new features
@@ -376,10 +369,10 @@ class BaseService {
             // and remind the developer that the first field in the result set must be
             // the primary key of the remote DB so we can match the internal table with
             // the received data.
-            print('The following data was not inserted into the device DB');
-            print('Please ensure that you are passing in all tables that you want processed by this function in the "tables" parameter');
-            print('Also, it is required that the primary key for the table to be the first field in the JSON data. Please check the JSON data format.');
-            print(ms);
+            // print('The following data was not inserted into the device DB');
+            // print('Please ensure that you are passing in all tables that you want processed by this function in the "tables" parameter');
+            // print('Also, it is required that the primary key for the table to be the first field in the JSON data. Please check the JSON data format.');
+            // print(ms);
           }
         }
       }
@@ -392,7 +385,7 @@ class BaseService {
   /// For any given table [_bulkUpdateDatabase] takes raw json results in a string, checks to see that
   /// the structure of that data matches the internal db using [normalizeMap] and then does a bulk update
   /// of the SQFlite table.
-  /// TODO (DevTeam): ultimately we need to find a way when a record has been deleted on the mobile device to make sure it does
+  /// TO-DO (DevTeam): ultimately we need to find a way when a record has been deleted on the mobile device to make sure it does
   /// not keep getting sent over the wire. This can be challenging because one record on the central server may exist in many
   /// mobile devices. For now, we try to avoid deleting records if possible because this issue has not been addressed.
   Future<bool> bulkUpdateDatabase(BaseTableHelper tableHelper, String tableName, String rawResults, Database db, {Function? informUser, bool suppressDeletes = false, String batchText = ''}) async {

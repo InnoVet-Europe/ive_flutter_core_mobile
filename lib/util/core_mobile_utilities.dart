@@ -3,8 +3,15 @@ import 'package:flutter/material.dart';
 
 // ignore: avoid_classes_with_only_static_members
 class IveCoreMobileUtilities {
-  static Future<bool?> showAlert(BuildContext context, String title, String body, String buttonText,
-      {bool showCancelButton = false, String cancelButtonText = 'Cancel', TextAlign textAlign = TextAlign.justify}) async {
+  static Future<bool?> showAlert(
+    BuildContext context,
+    String title,
+    String body,
+    String buttonText, {
+    bool showCancelButton = false,
+    String cancelButtonText = 'Cancel',
+    TextAlign textAlign = TextAlign.justify,
+  }) async {
     return showDialog<bool?>(
       context: context,
       barrierDismissible: false, // user must tap button!

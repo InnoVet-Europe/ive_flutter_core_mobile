@@ -3,21 +3,21 @@
   "packages": [
     {
       "name": "_fe_analyzer_shared",
-      "rootUri": "file:///Users/jameswhite/.pub-cache/hosted/pub.dev/_fe_analyzer_shared-55.0.0",
+      "rootUri": "file:///Users/jameswhite/.pub-cache/hosted/pub.dev/_fe_analyzer_shared-64.0.0",
       "packageUri": "lib/",
-      "languageVersion": "2.17"
+      "languageVersion": "3.0"
     },
     {
       "name": "analyzer",
-      "rootUri": "file:///Users/jameswhite/.pub-cache/hosted/pub.dev/analyzer-5.7.1",
+      "rootUri": "file:///Users/jameswhite/.pub-cache/hosted/pub.dev/analyzer-6.2.0",
       "packageUri": "lib/",
-      "languageVersion": "2.19"
+      "languageVersion": "3.0"
     },
     {
       "name": "args",
-      "rootUri": "file:///Users/jameswhite/.pub-cache/hosted/pub.dev/args-2.4.0",
+      "rootUri": "file:///Users/jameswhite/.pub-cache/hosted/pub.dev/args-2.4.2",
       "packageUri": "lib/",
-      "languageVersion": "2.18"
+      "languageVersion": "2.19"
     },
     {
       "name": "async",
@@ -26,10 +26,16 @@
       "languageVersion": "2.18"
     },
     {
-      "name": "build",
-      "rootUri": "file:///Users/jameswhite/.pub-cache/hosted/pub.dev/build-2.3.1",
+      "name": "boolean_selector",
+      "rootUri": "file:///Users/jameswhite/.pub-cache/hosted/pub.dev/boolean_selector-2.1.1",
       "packageUri": "lib/",
       "languageVersion": "2.17"
+    },
+    {
+      "name": "build",
+      "rootUri": "file:///Users/jameswhite/.pub-cache/hosted/pub.dev/build-2.4.1",
+      "packageUri": "lib/",
+      "languageVersion": "2.19"
     },
     {
       "name": "build_config",
@@ -39,27 +45,27 @@
     },
     {
       "name": "build_daemon",
-      "rootUri": "file:///Users/jameswhite/.pub-cache/hosted/pub.dev/build_daemon-3.1.1",
+      "rootUri": "file:///Users/jameswhite/.pub-cache/hosted/pub.dev/build_daemon-4.0.1",
       "packageUri": "lib/",
-      "languageVersion": "2.14"
+      "languageVersion": "3.0"
     },
     {
       "name": "build_resolvers",
-      "rootUri": "file:///Users/jameswhite/.pub-cache/hosted/pub.dev/build_resolvers-2.2.0",
+      "rootUri": "file:///Users/jameswhite/.pub-cache/hosted/pub.dev/build_resolvers-2.4.1",
       "packageUri": "lib/",
-      "languageVersion": "2.18"
+      "languageVersion": "3.0"
     },
     {
       "name": "build_runner",
-      "rootUri": "file:///Users/jameswhite/.pub-cache/hosted/pub.dev/build_runner-2.3.3",
+      "rootUri": "file:///Users/jameswhite/.pub-cache/hosted/pub.dev/build_runner-2.4.6",
       "packageUri": "lib/",
-      "languageVersion": "2.14"
+      "languageVersion": "3.0"
     },
     {
       "name": "build_runner_core",
-      "rootUri": "file:///Users/jameswhite/.pub-cache/hosted/pub.dev/build_runner_core-7.2.7",
+      "rootUri": "file:///Users/jameswhite/.pub-cache/hosted/pub.dev/build_runner_core-7.2.11",
       "packageUri": "lib/",
-      "languageVersion": "2.17"
+      "languageVersion": "2.19"
     },
     {
       "name": "built_collection",
@@ -69,21 +75,21 @@
     },
     {
       "name": "built_value",
-      "rootUri": "file:///Users/jameswhite/.pub-cache/hosted/pub.dev/built_value-8.4.4",
+      "rootUri": "file:///Users/jameswhite/.pub-cache/hosted/pub.dev/built_value-8.7.0",
       "packageUri": "lib/",
       "languageVersion": "2.12"
     },
     {
       "name": "characters",
-      "rootUri": "file:///Users/jameswhite/.pub-cache/hosted/pub.dev/characters-1.2.1",
+      "rootUri": "file:///Users/jameswhite/.pub-cache/hosted/pub.dev/characters-1.3.0",
       "packageUri": "lib/",
       "languageVersion": "2.12"
     },
     {
       "name": "checked_yaml",
-      "rootUri": "file:///Users/jameswhite/.pub-cache/hosted/pub.dev/checked_yaml-2.0.2",
+      "rootUri": "file:///Users/jameswhite/.pub-cache/hosted/pub.dev/checked_yaml-2.0.3",
       "packageUri": "lib/",
-      "languageVersion": "2.18"
+      "languageVersion": "2.19"
     },
     {
       "name": "clock",
@@ -93,15 +99,15 @@
     },
     {
       "name": "code_builder",
-      "rootUri": "file:///Users/jameswhite/.pub-cache/hosted/pub.dev/code_builder-4.4.0",
+      "rootUri": "file:///Users/jameswhite/.pub-cache/hosted/pub.dev/code_builder-4.7.0",
       "packageUri": "lib/",
-      "languageVersion": "2.17"
+      "languageVersion": "2.19"
     },
     {
       "name": "collection",
-      "rootUri": "file:///Users/jameswhite/.pub-cache/hosted/pub.dev/collection-1.17.0",
+      "rootUri": "file:///Users/jameswhite/.pub-cache/hosted/pub.dev/collection-1.17.2",
       "packageUri": "lib/",
-      "languageVersion": "2.12"
+      "languageVersion": "2.18"
     },
     {
       "name": "convert",
@@ -111,27 +117,27 @@
     },
     {
       "name": "crypto",
-      "rootUri": "file:///Users/jameswhite/.pub-cache/hosted/pub.dev/crypto-3.0.2",
+      "rootUri": "file:///Users/jameswhite/.pub-cache/hosted/pub.dev/crypto-3.0.3",
       "packageUri": "lib/",
-      "languageVersion": "2.14"
+      "languageVersion": "2.19"
     },
     {
       "name": "dart_style",
-      "rootUri": "file:///Users/jameswhite/.pub-cache/hosted/pub.dev/dart_style-2.2.5",
+      "rootUri": "file:///Users/jameswhite/.pub-cache/hosted/pub.dev/dart_style-2.3.3",
       "packageUri": "lib/",
-      "languageVersion": "2.17"
+      "languageVersion": "3.0"
     },
     {
       "name": "ffi",
-      "rootUri": "file:///Users/jameswhite/.pub-cache/hosted/pub.dev/ffi-2.0.1",
+      "rootUri": "file:///Users/jameswhite/.pub-cache/hosted/pub.dev/ffi-2.1.0",
       "packageUri": "lib/",
-      "languageVersion": "2.17"
+      "languageVersion": "3.0"
     },
     {
       "name": "file",
-      "rootUri": "file:///Users/jameswhite/.pub-cache/hosted/pub.dev/file-6.1.4",
+      "rootUri": "file:///Users/jameswhite/.pub-cache/hosted/pub.dev/file-7.0.0",
       "packageUri": "lib/",
-      "languageVersion": "2.12"
+      "languageVersion": "3.0"
     },
     {
       "name": "fixnum",
@@ -143,17 +149,17 @@
       "name": "flutter",
       "rootUri": "file:///Users/jameswhite/Desktop/Development.nosync/flutter/packages/flutter",
       "packageUri": "lib/",
-      "languageVersion": "2.17"
+      "languageVersion": "3.0"
     },
     {
       "name": "freezed",
-      "rootUri": "file:///Users/jameswhite/.pub-cache/hosted/pub.dev/freezed-2.3.2",
+      "rootUri": "file:///Users/jameswhite/.pub-cache/hosted/pub.dev/freezed-2.4.5",
       "packageUri": "lib/",
       "languageVersion": "2.17"
     },
     {
       "name": "freezed_annotation",
-      "rootUri": "file:///Users/jameswhite/.pub-cache/hosted/pub.dev/freezed_annotation-2.2.0",
+      "rootUri": "file:///Users/jameswhite/.pub-cache/hosted/pub.dev/freezed_annotation-2.4.1",
       "packageUri": "lib/",
       "languageVersion": "2.17"
     },
@@ -165,15 +171,15 @@
     },
     {
       "name": "glob",
-      "rootUri": "file:///Users/jameswhite/.pub-cache/hosted/pub.dev/glob-2.1.1",
+      "rootUri": "file:///Users/jameswhite/.pub-cache/hosted/pub.dev/glob-2.1.2",
       "packageUri": "lib/",
-      "languageVersion": "2.15"
+      "languageVersion": "2.19"
     },
     {
       "name": "graphs",
-      "rootUri": "file:///Users/jameswhite/.pub-cache/hosted/pub.dev/graphs-2.2.0",
+      "rootUri": "file:///Users/jameswhite/.pub-cache/hosted/pub.dev/graphs-2.3.1",
       "packageUri": "lib/",
-      "languageVersion": "2.12"
+      "languageVersion": "2.18"
     },
     {
       "name": "http_multi_server",
@@ -189,7 +195,7 @@
     },
     {
       "name": "intl",
-      "rootUri": "file:///Users/jameswhite/.pub-cache/hosted/pub.dev/intl-0.18.0",
+      "rootUri": "file:///Users/jameswhite/.pub-cache/hosted/pub.dev/intl-0.18.1",
       "packageUri": "lib/",
       "languageVersion": "2.12"
     },
@@ -201,43 +207,43 @@
     },
     {
       "name": "js",
-      "rootUri": "file:///Users/jameswhite/.pub-cache/hosted/pub.dev/js-0.6.5",
+      "rootUri": "file:///Users/jameswhite/.pub-cache/hosted/pub.dev/js-0.6.7",
       "packageUri": "lib/",
-      "languageVersion": "2.16"
+      "languageVersion": "2.19"
     },
     {
       "name": "json_annotation",
-      "rootUri": "file:///Users/jameswhite/.pub-cache/hosted/pub.dev/json_annotation-4.8.0",
+      "rootUri": "file:///Users/jameswhite/.pub-cache/hosted/pub.dev/json_annotation-4.8.1",
       "packageUri": "lib/",
-      "languageVersion": "2.18"
+      "languageVersion": "2.19"
     },
     {
       "name": "json_serializable",
-      "rootUri": "file:///Users/jameswhite/.pub-cache/hosted/pub.dev/json_serializable-6.6.1",
+      "rootUri": "file:///Users/jameswhite/.pub-cache/hosted/pub.dev/json_serializable-6.7.1",
       "packageUri": "lib/",
-      "languageVersion": "2.18"
+      "languageVersion": "3.0"
     },
     {
       "name": "logging",
-      "rootUri": "file:///Users/jameswhite/.pub-cache/hosted/pub.dev/logging-1.1.1",
+      "rootUri": "file:///Users/jameswhite/.pub-cache/hosted/pub.dev/logging-1.2.0",
       "packageUri": "lib/",
-      "languageVersion": "2.18"
+      "languageVersion": "2.19"
     },
     {
       "name": "matcher",
-      "rootUri": "file:///Users/jameswhite/.pub-cache/hosted/pub.dev/matcher-0.12.14",
+      "rootUri": "file:///Users/jameswhite/.pub-cache/hosted/pub.dev/matcher-0.12.16",
       "packageUri": "lib/",
       "languageVersion": "2.18"
     },
     {
       "name": "material_color_utilities",
-      "rootUri": "file:///Users/jameswhite/.pub-cache/hosted/pub.dev/material_color_utilities-0.2.0",
+      "rootUri": "file:///Users/jameswhite/.pub-cache/hosted/pub.dev/material_color_utilities-0.5.0",
       "packageUri": "lib/",
-      "languageVersion": "2.13"
+      "languageVersion": "2.17"
     },
     {
       "name": "meta",
-      "rootUri": "file:///Users/jameswhite/.pub-cache/hosted/pub.dev/meta-1.8.0",
+      "rootUri": "file:///Users/jameswhite/.pub-cache/hosted/pub.dev/meta-1.9.1",
       "packageUri": "lib/",
       "languageVersion": "2.12"
     },
@@ -261,51 +267,51 @@
     },
     {
       "name": "path_provider",
-      "rootUri": "file:///Users/jameswhite/.pub-cache/hosted/pub.dev/path_provider-2.0.13",
+      "rootUri": "file:///Users/jameswhite/.pub-cache/hosted/pub.dev/path_provider-2.1.1",
       "packageUri": "lib/",
-      "languageVersion": "2.14"
+      "languageVersion": "2.19"
     },
     {
       "name": "path_provider_android",
-      "rootUri": "file:///Users/jameswhite/.pub-cache/hosted/pub.dev/path_provider_android-2.0.24",
+      "rootUri": "file:///Users/jameswhite/.pub-cache/hosted/pub.dev/path_provider_android-2.2.1",
       "packageUri": "lib/",
-      "languageVersion": "2.17"
+      "languageVersion": "2.19"
     },
     {
       "name": "path_provider_foundation",
-      "rootUri": "file:///Users/jameswhite/.pub-cache/hosted/pub.dev/path_provider_foundation-2.1.3",
+      "rootUri": "file:///Users/jameswhite/.pub-cache/hosted/pub.dev/path_provider_foundation-2.3.1",
       "packageUri": "lib/",
-      "languageVersion": "2.17"
+      "languageVersion": "2.19"
     },
     {
       "name": "path_provider_linux",
-      "rootUri": "file:///Users/jameswhite/.pub-cache/hosted/pub.dev/path_provider_linux-2.1.10",
+      "rootUri": "file:///Users/jameswhite/.pub-cache/hosted/pub.dev/path_provider_linux-2.2.1",
       "packageUri": "lib/",
-      "languageVersion": "2.17"
+      "languageVersion": "2.19"
     },
     {
       "name": "path_provider_platform_interface",
-      "rootUri": "file:///Users/jameswhite/.pub-cache/hosted/pub.dev/path_provider_platform_interface-2.0.6",
+      "rootUri": "file:///Users/jameswhite/.pub-cache/hosted/pub.dev/path_provider_platform_interface-2.1.1",
       "packageUri": "lib/",
-      "languageVersion": "2.12"
+      "languageVersion": "2.19"
     },
     {
       "name": "path_provider_windows",
-      "rootUri": "file:///Users/jameswhite/.pub-cache/hosted/pub.dev/path_provider_windows-2.1.5",
+      "rootUri": "file:///Users/jameswhite/.pub-cache/hosted/pub.dev/path_provider_windows-2.2.1",
       "packageUri": "lib/",
-      "languageVersion": "2.17"
+      "languageVersion": "2.19"
     },
     {
       "name": "platform",
-      "rootUri": "file:///Users/jameswhite/.pub-cache/hosted/pub.dev/platform-3.1.0",
+      "rootUri": "file:///Users/jameswhite/.pub-cache/hosted/pub.dev/platform-3.1.3",
       "packageUri": "lib/",
-      "languageVersion": "2.12"
+      "languageVersion": "2.19"
     },
     {
       "name": "plugin_platform_interface",
-      "rootUri": "file:///Users/jameswhite/.pub-cache/hosted/pub.dev/plugin_platform_interface-2.1.4",
+      "rootUri": "file:///Users/jameswhite/.pub-cache/hosted/pub.dev/plugin_platform_interface-2.1.6",
       "packageUri": "lib/",
-      "languageVersion": "2.17"
+      "languageVersion": "2.19"
     },
     {
       "name": "pool",
@@ -314,32 +320,26 @@
       "languageVersion": "2.12"
     },
     {
-      "name": "process",
-      "rootUri": "file:///Users/jameswhite/.pub-cache/hosted/pub.dev/process-4.2.4",
-      "packageUri": "lib/",
-      "languageVersion": "2.14"
-    },
-    {
       "name": "pub_semver",
-      "rootUri": "file:///Users/jameswhite/.pub-cache/hosted/pub.dev/pub_semver-2.1.3",
+      "rootUri": "file:///Users/jameswhite/.pub-cache/hosted/pub.dev/pub_semver-2.1.4",
       "packageUri": "lib/",
       "languageVersion": "2.17"
     },
     {
       "name": "pubspec_parse",
-      "rootUri": "file:///Users/jameswhite/.pub-cache/hosted/pub.dev/pubspec_parse-1.2.2",
+      "rootUri": "file:///Users/jameswhite/.pub-cache/hosted/pub.dev/pubspec_parse-1.2.3",
       "packageUri": "lib/",
       "languageVersion": "2.18"
     },
     {
       "name": "shelf",
-      "rootUri": "file:///Users/jameswhite/.pub-cache/hosted/pub.dev/shelf-1.4.0",
+      "rootUri": "file:///Users/jameswhite/.pub-cache/hosted/pub.dev/shelf-1.4.1",
       "packageUri": "lib/",
       "languageVersion": "2.17"
     },
     {
       "name": "shelf_web_socket",
-      "rootUri": "file:///Users/jameswhite/.pub-cache/hosted/pub.dev/shelf_web_socket-1.0.3",
+      "rootUri": "file:///Users/jameswhite/.pub-cache/hosted/pub.dev/shelf_web_socket-1.0.4",
       "packageUri": "lib/",
       "languageVersion": "2.17"
     },
@@ -347,49 +347,49 @@
       "name": "sky_engine",
       "rootUri": "file:///Users/jameswhite/Desktop/Development.nosync/flutter/bin/cache/pkg/sky_engine",
       "packageUri": "lib/",
-      "languageVersion": "2.12"
+      "languageVersion": "3.0"
     },
     {
       "name": "source_gen",
-      "rootUri": "file:///Users/jameswhite/.pub-cache/hosted/pub.dev/source_gen-1.2.7",
+      "rootUri": "file:///Users/jameswhite/.pub-cache/hosted/pub.dev/source_gen-1.4.0",
       "packageUri": "lib/",
-      "languageVersion": "2.18"
+      "languageVersion": "3.0"
     },
     {
       "name": "source_helper",
-      "rootUri": "file:///Users/jameswhite/.pub-cache/hosted/pub.dev/source_helper-1.3.3",
+      "rootUri": "file:///Users/jameswhite/.pub-cache/hosted/pub.dev/source_helper-1.3.4",
       "packageUri": "lib/",
-      "languageVersion": "2.17"
+      "languageVersion": "2.19"
     },
     {
       "name": "source_span",
-      "rootUri": "file:///Users/jameswhite/.pub-cache/hosted/pub.dev/source_span-1.9.1",
+      "rootUri": "file:///Users/jameswhite/.pub-cache/hosted/pub.dev/source_span-1.10.0",
       "packageUri": "lib/",
-      "languageVersion": "2.14"
+      "languageVersion": "2.18"
     },
     {
       "name": "sqflite",
-      "rootUri": "file:///Users/jameswhite/.pub-cache/hosted/pub.dev/sqflite-2.2.5",
+      "rootUri": "file:///Users/jameswhite/.pub-cache/hosted/pub.dev/sqflite-2.3.0",
       "packageUri": "lib/",
-      "languageVersion": "2.18"
+      "languageVersion": "3.0"
     },
     {
       "name": "sqflite_common",
-      "rootUri": "file:///Users/jameswhite/.pub-cache/hosted/pub.dev/sqflite_common-2.4.2+2",
+      "rootUri": "file:///Users/jameswhite/.pub-cache/hosted/pub.dev/sqflite_common-2.5.0+1",
       "packageUri": "lib/",
-      "languageVersion": "2.18"
+      "languageVersion": "3.0"
     },
     {
       "name": "stack_trace",
-      "rootUri": "file:///Users/jameswhite/.pub-cache/hosted/pub.dev/stack_trace-1.11.0",
+      "rootUri": "file:///Users/jameswhite/.pub-cache/hosted/pub.dev/stack_trace-1.11.1",
       "packageUri": "lib/",
       "languageVersion": "2.18"
     },
     {
       "name": "stream_channel",
-      "rootUri": "file:///Users/jameswhite/.pub-cache/hosted/pub.dev/stream_channel-2.1.1",
+      "rootUri": "file:///Users/jameswhite/.pub-cache/hosted/pub.dev/stream_channel-2.1.2",
       "packageUri": "lib/",
-      "languageVersion": "2.14"
+      "languageVersion": "2.19"
     },
     {
       "name": "stream_transform",
@@ -405,7 +405,7 @@
     },
     {
       "name": "synchronized",
-      "rootUri": "file:///Users/jameswhite/.pub-cache/hosted/pub.dev/synchronized-3.0.1",
+      "rootUri": "file:///Users/jameswhite/.pub-cache/hosted/pub.dev/synchronized-3.1.0",
       "packageUri": "lib/",
       "languageVersion": "2.18"
     },
@@ -416,6 +416,12 @@
       "languageVersion": "2.12"
     },
     {
+      "name": "test_api",
+      "rootUri": "file:///Users/jameswhite/.pub-cache/hosted/pub.dev/test_api-0.6.1",
+      "packageUri": "lib/",
+      "languageVersion": "3.0"
+    },
+    {
       "name": "timing",
       "rootUri": "file:///Users/jameswhite/.pub-cache/hosted/pub.dev/timing-1.0.1",
       "packageUri": "lib/",
@@ -423,9 +429,9 @@
     },
     {
       "name": "typed_data",
-      "rootUri": "file:///Users/jameswhite/.pub-cache/hosted/pub.dev/typed_data-1.3.1",
+      "rootUri": "file:///Users/jameswhite/.pub-cache/hosted/pub.dev/typed_data-1.3.2",
       "packageUri": "lib/",
-      "languageVersion": "2.12"
+      "languageVersion": "2.17"
     },
     {
       "name": "vector_math",
@@ -435,42 +441,48 @@
     },
     {
       "name": "watcher",
-      "rootUri": "file:///Users/jameswhite/.pub-cache/hosted/pub.dev/watcher-1.0.2",
+      "rootUri": "file:///Users/jameswhite/.pub-cache/hosted/pub.dev/watcher-1.1.0",
       "packageUri": "lib/",
-      "languageVersion": "2.14"
+      "languageVersion": "3.0"
+    },
+    {
+      "name": "web",
+      "rootUri": "file:///Users/jameswhite/.pub-cache/hosted/pub.dev/web-0.1.4-beta",
+      "packageUri": "lib/",
+      "languageVersion": "3.1"
     },
     {
       "name": "web_socket_channel",
-      "rootUri": "file:///Users/jameswhite/.pub-cache/hosted/pub.dev/web_socket_channel-2.3.0",
+      "rootUri": "file:///Users/jameswhite/.pub-cache/hosted/pub.dev/web_socket_channel-2.4.0",
       "packageUri": "lib/",
-      "languageVersion": "2.12"
+      "languageVersion": "2.15"
     },
     {
       "name": "win32",
-      "rootUri": "file:///Users/jameswhite/.pub-cache/hosted/pub.dev/win32-3.1.3",
+      "rootUri": "file:///Users/jameswhite/.pub-cache/hosted/pub.dev/win32-5.0.9",
       "packageUri": "lib/",
-      "languageVersion": "2.17"
+      "languageVersion": "3.0"
     },
     {
       "name": "xdg_directories",
-      "rootUri": "file:///Users/jameswhite/.pub-cache/hosted/pub.dev/xdg_directories-1.0.0",
+      "rootUri": "file:///Users/jameswhite/.pub-cache/hosted/pub.dev/xdg_directories-1.0.3",
       "packageUri": "lib/",
-      "languageVersion": "2.17"
+      "languageVersion": "2.19"
     },
     {
       "name": "yaml",
-      "rootUri": "file:///Users/jameswhite/.pub-cache/hosted/pub.dev/yaml-3.1.1",
+      "rootUri": "file:///Users/jameswhite/.pub-cache/hosted/pub.dev/yaml-3.1.2",
       "packageUri": "lib/",
-      "languageVersion": "2.12"
+      "languageVersion": "2.19"
     },
     {
       "name": "ive_flutter_core_mobile",
       "rootUri": "../",
       "packageUri": "lib/",
-      "languageVersion": "2.14"
+      "languageVersion": "2.15"
     }
   ],
-  "generated": "2023-03-12T10:35:00.625142Z",
+  "generated": "2023-11-12T11:22:53.099967Z",
   "generator": "pub",
-  "generatorVersion": "2.19.4"
+  "generatorVersion": "3.1.5"
 }
