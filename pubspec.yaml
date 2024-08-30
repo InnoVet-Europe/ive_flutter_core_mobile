@@ -1,13 +1,13 @@
   
 name: ive_flutter_core_mobile
 description: Core assets for InnoVet Europe Flutter projects
-version: 1.2.4
+version: 1.2.5
 homepage: https://www.harriercentral.com/
 publish_to: none
 
 environment:
   sdk: '>=3.3.1 <4.0.0'
-  flutter: 3.22.2
+  flutter: ^3.24.1
 
 dependencies:
   flutter:
