@@ -129,7 +129,7 @@
     },
     {
       "name": "dart_style",
-      "rootUri": "file:///Users/jameswhite/.pub-cache/hosted/pub.dev/dart_style-2.3.6",
+      "rootUri": "file:///Users/jameswhite/.pub-cache/hosted/pub.dev/dart_style-2.3.7",
       "packageUri": "lib/",
       "languageVersion": "3.0"
     },
@@ -249,7 +249,7 @@
     },
     {
       "name": "meta",
-      "rootUri": "file:///Users/jameswhite/.pub-cache/hosted/pub.dev/meta-1.8.0",
+      "rootUri": "file:///Users/jameswhite/.pub-cache/hosted/pub.dev/meta-1.15.0",
       "packageUri": "lib/",
       "languageVersion": "2.12"
     },
@@ -482,10 +482,10 @@
       "languageVersion": "3.3"
     }
   ],
-  "generated": "2024-08-30T20:35:29.804600Z",
+  "generated": "2024-09-13T17:40:01.397193Z",
   "generator": "pub",
-  "generatorVersion": "3.5.1",
+  "generatorVersion": "3.5.3",
   "flutterRoot": "file:///Users/jameswhite/Downloads/flutter",
-  "flutterVersion": "3.24.1",
+  "flutterVersion": "3.24.3",
   "pubCache": "file:///Users/jameswhite/.pub-cache"
 }
