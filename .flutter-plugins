@@ -1,7 +1,9 @@
 # This is a generated file; do not edit or check into version control.
-path_provider=/Users/jameswhite/.pub-cache/hosted/pub.dev/path_provider-2.1.4/
-path_provider_android=/Users/jameswhite/.pub-cache/hosted/pub.dev/path_provider_android-2.2.10/
-path_provider_foundation=/Users/jameswhite/.pub-cache/hosted/pub.dev/path_provider_foundation-2.4.0/
-path_provider_linux=/Users/jameswhite/.pub-cache/hosted/pub.dev/path_provider_linux-2.2.1/
-path_provider_windows=/Users/jameswhite/.pub-cache/hosted/pub.dev/path_provider_windows-2.3.0/
-sqflite=/Users/jameswhite/.pub-cache/hosted/pub.dev/sqflite-2.3.3+1/
+path_provider=/Users/jawDev/.pub-cache/hosted/pub.dev/path_provider-2.1.5/
+path_provider_android=/Users/jawDev/.pub-cache/hosted/pub.dev/path_provider_android-2.2.10/
+path_provider_foundation=/Users/jawDev/.pub-cache/hosted/pub.dev/path_provider_foundation-2.4.0/
+path_provider_linux=/Users/jawDev/.pub-cache/hosted/pub.dev/path_provider_linux-2.2.1/
+path_provider_windows=/Users/jawDev/.pub-cache/hosted/pub.dev/path_provider_windows-2.3.0/
+sqflite=/Users/jawDev/.pub-cache/hosted/pub.dev/sqflite-2.4.2/
+sqflite_android=/Users/jawDev/.pub-cache/hosted/pub.dev/sqflite_android-2.4.1/
+sqflite_darwin=/Users/jawDev/.pub-cache/hosted/pub.dev/sqflite_darwin-2.4.2/
