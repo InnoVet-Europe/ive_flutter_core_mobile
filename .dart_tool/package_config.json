@@ -29,7 +29,7 @@
       "name": "flutter",
       "rootUri": "file:///Users/jawDev/Development/flutter/packages/flutter",
       "packageUri": "lib/",
-      "languageVersion": "3.7"
+      "languageVersion": "3.8"
     },
     {
       "name": "intl",
@@ -45,9 +45,9 @@
     },
     {
       "name": "meta",
-      "rootUri": "file:///Users/jawDev/.pub-cache/hosted/pub.dev/meta-1.16.0",
+      "rootUri": "file:///Users/jawDev/.pub-cache/hosted/pub.dev/meta-1.17.0",
       "packageUri": "lib/",
-      "languageVersion": "2.12"
+      "languageVersion": "3.5"
     },
     {
       "name": "path",
@@ -107,7 +107,7 @@
       "name": "sky_engine",
       "rootUri": "file:///Users/jawDev/Development/flutter/bin/cache/pkg/sky_engine",
       "packageUri": "lib/",
-      "languageVersion": "3.7"
+      "languageVersion": "3.8"
     },
     {
       "name": "sqflite",
@@ -147,9 +147,9 @@
     },
     {
       "name": "vector_math",
-      "rootUri": "file:///Users/jawDev/.pub-cache/hosted/pub.dev/vector_math-2.1.4",
+      "rootUri": "file:///Users/jawDev/.pub-cache/hosted/pub.dev/vector_math-2.2.0",
       "packageUri": "lib/",
-      "languageVersion": "2.14"
+      "languageVersion": "3.1"
     },
     {
       "name": "xdg_directories",
@@ -164,10 +164,9 @@
       "languageVersion": "3.7"
     }
   ],
-  "generated": "2025-04-05T19:14:38.357877Z",
   "generator": "pub",
-  "generatorVersion": "3.7.2",
+  "generatorVersion": "3.10.1",
   "flutterRoot": "file:///Users/jawDev/Development/flutter",
-  "flutterVersion": "3.29.2",
+  "flutterVersion": "3.38.3",
   "pubCache": "file:///Users/jawDev/.pub-cache"
 }
