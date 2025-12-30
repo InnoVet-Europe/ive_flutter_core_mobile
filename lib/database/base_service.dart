@@ -16,7 +16,7 @@ class EmptyModel implements BaseModel {}
 
 /// The BaseTableHelper class is an abstract class to define a few of the
 /// required functions for all table helper classes
-abstract class BaseTableHelper {
+abstract class BaseTableHelper<TDomain> {
   /// NOTE: currently the cacheDuration feature is not used
   /// the [cacheDuration] parameter was originally intended to enable
   /// developers the ability to set an expiration time limit on the data
@@ -75,7 +75,7 @@ abstract class BaseTableHelper {
   /// might only contain records relevant to that one user, in "admin" an identical copy of
   /// the table might exist that contains information for all users. Each of these two tables
   /// will have a different name depending on the specific appDomain.
-  String getTableName(dynamic appDomainType) => '<no table name>';
+  String getTableName(TDomain appDomainType) => '<no table name>';
 
   /// Upon initialization we create SQFLite tables for each data entity, here's the method signature for
   /// that function
