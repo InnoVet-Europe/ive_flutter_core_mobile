@@ -26,7 +26,7 @@ class DBProvider {
   static Future<Database> openOrInitDb(
     String dbName,
     int dbVersion,
-    Function informUser,
+    void Function(String message)? informUser,
     List<MigrationsModel> migrations, {
     required Function createTables,
     required Function openDb,
