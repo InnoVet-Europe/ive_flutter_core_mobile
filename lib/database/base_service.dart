@@ -82,7 +82,7 @@ abstract class BaseTableHelper<TDomain> {
   Future<void> createTable(
     Database db,
     int version,
-    dynamic appDomainType,
+    TDomain appDomainType,
   ) async {
     return;
   }
@@ -91,7 +91,7 @@ abstract class BaseTableHelper<TDomain> {
   Future<void> createIndexes(
     Database db,
     int version,
-    dynamic appDomainType,
+    TDomain appDomainType,
   ) async {
     return;
   }
@@ -140,12 +140,12 @@ mixin BaseFields {
   final String colUpdatedAtValue = 'updatedAtValue';
 }
 
-class BaseService {
+class BaseService<TDomain> {
   /// For a given table and appDomain, [selectAllFromLocalDb] returns a list that contains all objects in the table
   Future<List<BaseModel>> selectAllFromLocalDb(
     Database db,
-    BaseTableHelper tableHelper,
-    dynamic appDomainType,
+    BaseTableHelper<TDomain> tableHelper,
+    TDomain appDomainType,
   ) async {
     final List<Map<String, dynamic>> result = await db.query(
       tableHelper.getTableName(appDomainType),
@@ -168,7 +168,7 @@ class BaseService {
   /// the table was updated. This is used for database replication.
   Future<int> getLastUpdatedTime(
     Database db,
-    BaseTableHelper tableHelper,
+    BaseTableHelper<TDomain> tableHelper,
     String tableName,
     String colUpdatedAtValue,
   ) async {
@@ -182,7 +182,7 @@ class BaseService {
   /// [clearTable] deletes all records from a SQFLite table
   Future<void> clearTable(
     Database db,
-    BaseTableHelper tableHelper,
+    BaseTableHelper<TDomain> tableHelper,
     String tableName,
   ) async {
     final String query = 'DELETE FROM $tableName';
@@ -202,10 +202,10 @@ class BaseService {
 
   Future<List<dynamic>> updateSqlTablesFromJsonWithAdHocData(
     String jsonResults,
-    List<BaseTableHelper> tables,
+    List<BaseTableHelper<TDomain>> tables,
     Database db,
-    dynamic appDomainType, {
-    Function? informUser,
+    TDomain appDomainType, {
+    void Function(String message)? informUser,
     bool suppressDeletes = false,
     String batchText = '',
   }) async {
@@ -244,7 +244,7 @@ class BaseService {
           // if we are not processing adHocData,
           // look through the tables that we are allowed to insert into and see if
           // we can find which one has the same remoteDbId as is present in the received data
-          for (final BaseTableHelper helper in tables) {
+          for (final BaseTableHelper<TDomain> helper in tables) {
             if (ms.startsWith('[{"${helper.remoteDbId}"')) {
               isProcessed = true;
               // we found a table that matches the received data, so go ahead
@@ -303,10 +303,10 @@ class BaseService {
   }
 
   Future<List<Map<String, dynamic>>> getSqlFieldsById(
-    BaseTableHelper tableHelper,
+    BaseTableHelper<TDomain> tableHelper,
     Database db,
     String id,
-    dynamic appDomainType, {
+    TDomain appDomainType, {
     String? secondaryId,
     String? tertiaryId,
   }) async {
@@ -340,10 +340,10 @@ class BaseService {
 
   Future<int> updateSqlTablesFromJsonWithPaging(
     String jsonResults,
-    List<BaseTableHelper> tables,
+    List<BaseTableHelper<TDomain>> tables,
     Database db,
-    dynamic appDomainType, {
-    Function? informUser,
+    TDomain appDomainType, {
+    void Function(String message)? informUser,
     bool suppressDeletes = false,
     String batchText = '',
   }) async {
@@ -376,7 +376,7 @@ class BaseService {
           // if we are not processing adHocData,
           // look through the tables that we are allowed to insert into and see if
           // we can find which one has the same remoteDbId as is present in the received data
-          for (final BaseTableHelper helper in tables) {
+          for (final BaseTableHelper<TDomain> helper in tables) {
             if (ms.startsWith('[{"${helper.remoteDbId}"')) {
               isProcessed = true;
               // we found a table that matches the received data, so go ahead
@@ -442,11 +442,11 @@ class BaseService {
   /// not keep getting sent over the wire. This can be challenging because one record on the central server may exist in many
   /// mobile devices. For now, we try to avoid deleting records if possible because this issue has not been addressed.
   Future<bool> bulkUpdateDatabase(
-    BaseTableHelper tableHelper,
+    BaseTableHelper<TDomain> tableHelper,
     String tableName,
     String rawResults,
     Database db, {
-    Function? informUser,
+    void Function(String message)? informUser,
     bool suppressDeletes = false,
     String batchText = '',
   }) async {
@@ -461,8 +461,17 @@ class BaseService {
     // results will come in as an array of json result sets, typically there will be only
     // one result set that contains an array of json objects, but in exceptional cases
     // there can be more than one result set.
-    final List<dynamic> jsonResultSets =
-        json.decode(rawResults) as List<dynamic>;
+    final List<List<Map<String, dynamic>>> jsonResultSets =
+        (json.decode(rawResults) as List<dynamic>)
+            .map<List<Map<String, dynamic>>>(
+              (dynamic resultSet) =>
+                  (resultSet as List<dynamic>)
+                      .map<Map<String, dynamic>>(
+                        (dynamic record) => record as Map<String, dynamic>,
+                      )
+                      .toList(),
+            )
+            .toList();
     print(
       '$tableName result sets received from cloud = ${jsonResultSets.length}',
     );
@@ -477,15 +486,14 @@ class BaseService {
 
     // loop through the resul sets
     for (int i = 0; i < jsonResultSets.length; i++) {
-      final List<dynamic> jsonResults = jsonResultSets[i] as List<dynamic>;
+      final List<Map<String, dynamic>> jsonResults = jsonResultSets[i];
       print('$tableName results received from cloud = ${jsonResults.length}');
 
       additionalPageAvailable = jsonResults.length == tableHelper.pageSize;
 
       // then loop through the records in each result set
       for (int j = 0; j < jsonResults.length; j++) {
-        Map<String, dynamic> fieldsOnTheWire =
-            jsonResults[j] as Map<String, dynamic>;
+        Map<String, dynamic> fieldsOnTheWire = jsonResults[j];
 
         // the first time through the loop, check to see if the data on the wire matches the
         // data in the internal database. If it does not, we want to print out the name

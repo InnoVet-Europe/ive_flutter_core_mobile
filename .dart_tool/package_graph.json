@@ -5,7 +5,7 @@
   "packages": [
     {
       "name": "ive_flutter_core_mobile",
-      "version": "1.2.12",
+      "version": "1.2.13",
       "dependencies": [
         "flutter",
         "intl",
