@@ -5,14 +5,23 @@
   "packages": [
     {
       "name": "ive_flutter_core_mobile",
-      "version": "1.2.13",
+      "version": "1.2.14",
       "dependencies": [
         "flutter",
         "intl",
         "path_provider",
         "sqflite"
       ],
-      "devDependencies": []
+      "devDependencies": [
+        "flutter_lints"
+      ]
+    },
+    {
+      "name": "flutter_lints",
+      "version": "6.0.0",
+      "dependencies": [
+        "lints"
+      ]
     },
     {
       "name": "path_provider",
@@ -58,6 +67,11 @@
         "sky_engine",
         "vector_math"
       ]
+    },
+    {
+      "name": "lints",
+      "version": "6.0.0",
+      "dependencies": []
     },
     {
       "name": "path_provider_windows",

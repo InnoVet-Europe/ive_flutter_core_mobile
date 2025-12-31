@@ -32,10 +32,22 @@
       "languageVersion": "3.8"
     },
     {
+      "name": "flutter_lints",
+      "rootUri": "file:///Users/jawDev/.pub-cache/hosted/pub.dev/flutter_lints-6.0.0",
+      "packageUri": "lib/",
+      "languageVersion": "3.8"
+    },
+    {
       "name": "intl",
       "rootUri": "file:///Users/jawDev/.pub-cache/hosted/pub.dev/intl-0.20.2",
       "packageUri": "lib/",
       "languageVersion": "3.3"
+    },
+    {
+      "name": "lints",
+      "rootUri": "file:///Users/jawDev/.pub-cache/hosted/pub.dev/lints-6.0.0",
+      "packageUri": "lib/",
+      "languageVersion": "3.8"
     },
     {
       "name": "material_color_utilities",
