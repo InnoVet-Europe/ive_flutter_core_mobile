@@ -434,13 +434,15 @@ class BaseService<TDomain> {
     return tablesToPage;
   }
 
-  /// [_bulkUpdateDatabase] is one of the most important functions in the replication system.
-  /// For any given table [_bulkUpdateDatabase] takes raw json results in a string, checks to see that
-  /// the structure of that data matches the internal db using [normalizeMap] and then does a bulk update
-  /// of the SQFlite table.
-  /// TO-DO (DevTeam): ultimately we need to find a way when a record has been deleted on the mobile device to make sure it does
-  /// not keep getting sent over the wire. This can be challenging because one record on the central server may exist in many
-  /// mobile devices. For now, we try to avoid deleting records if possible because this issue has not been addressed.
+  /// [bulkUpdateDatabase] takes raw json results in a string, normalises them
+  /// against the local schema, and performs a bulk upsert/delete into the
+  /// SQFLite table.
+  ///
+  /// For simple-key tables (no [BaseTableHelper.secondaryKey]) the existence
+  /// check is batched into a single SELECT … IN (…) query rather than one
+  /// rawQuery per record, which dramatically reduces SQLite I/O on physical
+  /// devices (NAND flash vs in-memory simulator).  Compound-key tables fall
+  /// back to the original per-record query.
   Future<bool> bulkUpdateDatabase(
     BaseTableHelper<TDomain> tableHelper,
     String tableName,
@@ -455,7 +457,6 @@ class BaseService<TDomain> {
     int deletedCounter = 0;
 
     bool? doNormalizeMap;
-
     bool additionalPageAvailable = false;
 
     // results will come in as an array of json result sets, typically there will be only
@@ -476,6 +477,41 @@ class BaseService<TDomain> {
       '$tableName result sets received from cloud = ${jsonResultSets.length}',
     );
 
+    // -----------------------------------------------------------------------
+    // Batch existence pre-scan (simple-key tables only)
+    // Replaces N sequential "SELECT id WHERE pk = ?" calls with a single
+    // "SELECT pk, id WHERE pk IN (?…)" chunked at 900 (SQLite bind limit is
+    // 999).  Compound-key tables keep the original per-record query path.
+    // -----------------------------------------------------------------------
+    final bool _useSimpleKeyLookup =
+        tableHelper.secondaryKey == null || tableHelper.secondaryKey!.isEmpty;
+
+    Map<String, int>? _existingIdsByPk;
+    if (_useSimpleKeyLookup) {
+      _existingIdsByPk = <String, int>{};
+      const int _chunkSize = 900;
+      final List<String> allPks = <String>[
+        for (final List<Map<String, dynamic>> rs in jsonResultSets)
+          for (final Map<String, dynamic> rec in rs)
+            if (rec[tableHelper.remoteDbId] != null)
+              rec[tableHelper.remoteDbId].toString(),
+      ];
+      for (int offset = 0; offset < allPks.length; offset += _chunkSize) {
+        final List<String> chunk =
+            allPks.sublist(offset, (offset + _chunkSize).clamp(0, allPks.length));
+        final String placeholders = List<String>.filled(chunk.length, '?').join(',');
+        final List<Map<String, dynamic>> rows = await db.rawQuery(
+          'SELECT ${tableHelper.remoteDbId}, id FROM $tableName '
+          'WHERE ${tableHelper.remoteDbId} IN ($placeholders)',
+          chunk,
+        );
+        for (final Map<String, dynamic> row in rows) {
+          _existingIdsByPk[row[tableHelper.remoteDbId].toString()] =
+              row['id'] as int;
+        }
+      }
+    }
+
     // keep track of the percentage of results added to the DB so we can give the user
     // a status indication that the database is being populated. This is typically
     // only used when the database is first loaded.
@@ -484,7 +520,7 @@ class BaseService<TDomain> {
     // SQFLite is much more efficient when you batch database calls, so start a new batch
     final Batch batch = db.batch();
 
-    // loop through the resul sets
+    // loop through the result sets
     for (int i = 0; i < jsonResultSets.length; i++) {
       final List<Map<String, dynamic>> jsonResults = jsonResultSets[i];
       print('$tableName results received from cloud = ${jsonResults.length}');
@@ -568,31 +604,42 @@ class BaseService<TDomain> {
         }
 
         // since we are doing a bulk insert / update of the database, we need to append the 'updatedAtValue'
-        fieldsOnTheWire.addAll(<String, dynamic>{
-          'updatedAtValue':
-              DateTime.parse(
-                fieldsOnTheWire['updatedAt'].toString().padRight(26, '0'),
-              ).microsecondsSinceEpoch,
-        });
-
-        String query;
-        if ((tableHelper.secondaryKey == null) ||
-            (tableHelper.secondaryKey!.isEmpty)) {
-          query =
-              'SELECT id FROM $tableName WHERE ${tableHelper.remoteDbId} = "${fieldsOnTheWire[tableHelper.remoteDbId]}"';
-        } else if ((tableHelper.tertiaryKey == null) ||
-            (tableHelper.tertiaryKey!.isEmpty)) {
-          query =
-              'SELECT id FROM $tableName WHERE ${tableHelper.remoteDbId} = "${fieldsOnTheWire[tableHelper.remoteDbId]}" AND ${tableHelper.secondaryKey} = "${fieldsOnTheWire[tableHelper.secondaryKey]}"';
-        } else {
-          query =
-              'SELECT id FROM $tableName WHERE ${tableHelper.remoteDbId} = "${fieldsOnTheWire[tableHelper.remoteDbId]}" AND ${tableHelper.secondaryKey} = "${fieldsOnTheWire[tableHelper.secondaryKey]}" AND ${tableHelper.tertiaryKey} = "${fieldsOnTheWire[tableHelper.tertiaryKey]}"';
+        // Wrapped in try/catch: a malformed or null updatedAt value from the server would
+        // throw FormatException which, uncaught, propagates all the way up to an unawaited()
+        // call site and silently hangs the boot sequence permanently.
+        try {
+          fieldsOnTheWire.addAll(<String, dynamic>{
+            'updatedAtValue': DateTime.parse(
+              fieldsOnTheWire['updatedAt'].toString().padRight(26, '0'),
+            ).microsecondsSinceEpoch,
+          });
+        } catch (_) {
+          fieldsOnTheWire.addAll(<String, dynamic>{'updatedAtValue': 0});
         }
 
-        // does the record already exist in the database? Check using the remoteDbId.
-        final List<Map<String, dynamic>> localDbRecord = await db.rawQuery(
-          query,
-        );
+        // Resolve whether this record already exists in the local DB.
+        // Simple-key tables use the pre-scanned map; compound-key tables fall
+        // back to a per-record query.
+        final List<Map<String, dynamic>> localDbRecord;
+        if (_existingIdsByPk != null) {
+          final int? existingId = _existingIdsByPk[
+              fieldsOnTheWire[tableHelper.remoteDbId].toString()];
+          localDbRecord = existingId != null
+              ? <Map<String, dynamic>>[<String, dynamic>{'id': existingId}]
+              : <Map<String, dynamic>>[];
+        } else {
+          // Compound-key table: per-record query (original behaviour).
+          final String query;
+          if ((tableHelper.tertiaryKey == null) ||
+              (tableHelper.tertiaryKey!.isEmpty)) {
+            query =
+                'SELECT id FROM $tableName WHERE ${tableHelper.remoteDbId} = "${fieldsOnTheWire[tableHelper.remoteDbId]}" AND ${tableHelper.secondaryKey} = "${fieldsOnTheWire[tableHelper.secondaryKey]}"';
+          } else {
+            query =
+                'SELECT id FROM $tableName WHERE ${tableHelper.remoteDbId} = "${fieldsOnTheWire[tableHelper.remoteDbId]}" AND ${tableHelper.secondaryKey} = "${fieldsOnTheWire[tableHelper.secondaryKey]}" AND ${tableHelper.tertiaryKey} = "${fieldsOnTheWire[tableHelper.tertiaryKey]}"';
+          }
+          localDbRecord = await db.rawQuery(query);
+        }
 
         // has the record been marked as deleted?
         if (suppressDeletes || (jsonResults[j]['removed'] ?? 0) == 0) {
@@ -609,7 +656,7 @@ class BaseService<TDomain> {
             batch.insert(tableName, fieldsOnTheWire);
             insertCounter++;
           } else {
-            // get the internal SQFLite primary key of the reocrd we want to update
+            // get the internal SQFLite primary key of the record we want to update
             final String rowId = localDbRecord.first['id'].toString();
             // ...and update it!
             batch.update(tableName, fieldsOnTheWire, where: 'id = $rowId');
@@ -628,12 +675,6 @@ class BaseService<TDomain> {
             }
           }
         }
-
-        // // every 250 records do a commit. I'm not sure if this will improve performance, but it's worth a try
-        // if ((j % 250) == 0) {
-        //   await batch.commit(noResult: true);
-        //   batch = db.batch();
-        // }
       }
     }
 
