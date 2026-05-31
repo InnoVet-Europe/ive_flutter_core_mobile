@@ -215,86 +215,69 @@ class BaseService<TDomain> {
     List<dynamic> adHocData =
         <dynamic>[]; // prepare to return an empty list instead of null
 
-    // Sometimes, the results on the wire consist of an array of result sets from many different
-    // SQL tables on the remote DB. We want to
-    // process them one at a time, so if that's the case, remove the outer brackets
-    // from the result string
-    if (jsonResults.startsWith('[[')) {
-      jsonResults = jsonResults.substring(1, jsonResults.length - 1);
+    // Parse the full multi-result-set response with proper JSON decoding.
+    // The wire format is [[rowset1],[rowset2],...]. Using regex to split
+    // result sets is fragile when row field values themselves contain [{...}]
+    // patterns (e.g. JSON-typed columns like trailSymbolsConfigJson).
+    final String fullJson =
+        jsonResults.startsWith('[[') ? jsonResults : '[$jsonResults]';
+    List<dynamic> allResultSets;
+    try {
+      allResultSets = jsonDecode(fullJson) as List<dynamic>;
+    } catch (_) {
+      allResultSets = [];
     }
 
-    // using REGEX, pull out each of the result sets from the data
-    final RegExp r = RegExp(r'\[(\{(.*?)\})\]', multiLine: true);
-    final Iterable<Match> matches = r.allMatches(jsonResults);
-    for (int i = 0; i < matches.length; i++) {
-      // grab a single result set
-      final String? ms = matches.elementAt(i).group(0);
+    for (final rawResultSet in allResultSets) {
+      final List<dynamic> rows = rawResultSet as List<dynamic>;
+      if (rows.isEmpty) continue;
+      // Re-encode so the startsWith checks below work identically to before.
+      final String ms = jsonEncode(rows);
 
       bool isProcessed = false;
 
-      if (ms != null) {
-        // are we processing adHocData?
-        if (ms.startsWith(r'[{"adHocDataId"')) {
-          isProcessed = true;
-          final List<dynamic> adHocItems = jsonDecode(ms) as List<dynamic>;
-          if (adHocItems.isNotEmpty) {
-            adHocData = adHocItems;
-          }
-        } else {
-          // if we are not processing adHocData,
-          // look through the tables that we are allowed to insert into and see if
-          // we can find which one has the same remoteDbId as is present in the received data
-          for (final BaseTableHelper<TDomain> helper in tables) {
-            if (ms.startsWith('[{"${helper.remoteDbId}"')) {
-              isProcessed = true;
-              // we found a table that matches the received data, so go ahead
-              // and do a bulk insert into the SQFLite DB.
-              await bulkUpdateDatabase(
-                helper,
-                helper.getTableName(appDomainType),
-                '[$ms]',
-                db,
-                informUser: informUser,
-                suppressDeletes: suppressDeletes,
-                batchText: batchText,
-              );
-            }
+      // are we processing adHocData?
+      if (ms.startsWith(r'[{"adHocDataId"')) {
+        isProcessed = true;
+        final List<dynamic> adHocItems = jsonDecode(ms) as List<dynamic>;
+        if (adHocItems.isNotEmpty) {
+          adHocData = adHocItems;
+        }
+      } else {
+        // look through the tables that we are allowed to insert into and see if
+        // we can find which one has the same remoteDbId as is present in the received data
+        for (final BaseTableHelper<TDomain> helper in tables) {
+          if (ms.startsWith('[{"${helper.remoteDbId}"')) {
+            isProcessed = true;
+            await bulkUpdateDatabase(
+              helper,
+              helper.getTableName(appDomainType),
+              '[$ms]',
+              db,
+              informUser: informUser,
+              suppressDeletes: suppressDeletes,
+              batchText: batchText,
+            );
           }
         }
+      }
 
-        if (!isProcessed) {
-          // in the SQL stored procedures that process the data, sometimes we run across an error
-          // (e.g. such as an invalid access token). This data will contain an arbitrary 'errorId'
-          // field that serves as a flag that an error has occurred. When this happens, put the
-          // error information into the adHocData variable and return that to the caller.
-          if (ms.startsWith(r'[{"errorId"')) {
-            final List<dynamic> errorItems = jsonDecode(ms) as List<dynamic>;
-            if (errorItems.isNotEmpty) {
-              adHocData = errorItems;
-            }
-            print('server messages received');
-          } else {
-            // There is a chance that the server returned data that this version
-            // of the software is not expecting, such as in cases when new features
-            // have been added to new releases and this is an older release
-            // in these cases, just ignore the extra data.
-            // It is also possible that we have received data that the app developer
-            // has chosen to ignore by not passing in the appropriate table into the
-            // list of tables when this function was called.
-
-            // Just to be safe, do a debug print anyway
-            // and remind the developer that the first field in the result set must be
-            // the primary key of the remote DB so we can match the internal table with
-            // the received data.
-            print('The following data was not inserted into the device DB');
-            print(
-              'Please ensure that you are passing in all tables that you want processed by this function in the "tables" parameter',
-            );
-            print(
-              'Also, it is required that the primary key for the table to be the first field in the JSON data. Please check the JSON data format.',
-            );
-            print(ms);
+      if (!isProcessed) {
+        if (ms.startsWith(r'[{"errorId"')) {
+          final List<dynamic> errorItems = jsonDecode(ms) as List<dynamic>;
+          if (errorItems.isNotEmpty) {
+            adHocData = errorItems;
           }
+          print('server messages received');
+        } else {
+          print('The following data was not inserted into the device DB');
+          print(
+            'Please ensure that you are passing in all tables that you want processed by this function in the "tables" parameter',
+          );
+          print(
+            'Also, it is required that the primary key for the table to be the first field in the JSON data. Please check the JSON data format.',
+          );
+          print(ms);
         }
       }
     }
@@ -351,59 +334,49 @@ class BaseService<TDomain> {
 
     int tablesToPage = 0;
 
-    // Sometimes, the results on the wire consist of an array of result sets from many different
-    // SQL tables on the remote DB. We want to
-    // process them one at a time, so if that's the case, remove the outer brackets
-    // from the result string
-    if (jsonResults.startsWith('[[')) {
-      jsonResults = jsonResults.substring(1, jsonResults.length - 1);
+    // Parse the full multi-result-set response with proper JSON decoding.
+    // Regex splitting is fragile when field values contain [{...}] patterns.
+    final String fullJson2 =
+        jsonResults.startsWith('[[') ? jsonResults : '[$jsonResults]';
+    List<dynamic> allResultSets2;
+    try {
+      allResultSets2 = jsonDecode(fullJson2) as List<dynamic>;
+    } catch (_) {
+      allResultSets2 = [];
     }
 
-    // using REGEX, pull out each of the result sets from the data
-    final RegExp r = RegExp(r'\[(\{(.*?)\})\]', multiLine: true);
-    final Iterable<Match> matches = r.allMatches(jsonResults);
-    for (int i = 0; i < matches.length; i++) {
-      // grab a single result set
-      final String? ms = matches.elementAt(i).group(0);
+    for (final rawResultSet in allResultSets2) {
+      final List<dynamic> rows = rawResultSet as List<dynamic>;
+      if (rows.isEmpty) continue;
+      final String ms = jsonEncode(rows);
 
       bool isProcessed = false;
 
-      if (ms != null) {
-        // are we processing adHocData?
-        if (ms.startsWith(r'[{"adHocDataId"')) {
-          isProcessed = true;
-        } else {
-          // if we are not processing adHocData,
-          // look through the tables that we are allowed to insert into and see if
-          // we can find which one has the same remoteDbId as is present in the received data
-          for (final BaseTableHelper<TDomain> helper in tables) {
-            if (ms.startsWith('[{"${helper.remoteDbId}"')) {
-              isProcessed = true;
-              // we found a table that matches the received data, so go ahead
-              // and do a bulk insert into the SQFLite DB.
-              final bool additionalPageSyncRequired = await bulkUpdateDatabase(
-                helper,
-                helper.getTableName(appDomainType),
-                '[$ms]',
-                db,
-                informUser: informUser,
-                suppressDeletes: suppressDeletes,
-                batchText: batchText,
-              );
+      if (ms.startsWith(r'[{"adHocDataId"')) {
+        isProcessed = true;
+      } else {
+        for (final BaseTableHelper<TDomain> helper in tables) {
+          if (ms.startsWith('[{"${helper.remoteDbId}"')) {
+            isProcessed = true;
+            final bool additionalPageSyncRequired = await bulkUpdateDatabase(
+              helper,
+              helper.getTableName(appDomainType),
+              '[$ms]',
+              db,
+              informUser: informUser,
+              suppressDeletes: suppressDeletes,
+              batchText: batchText,
+            );
 
-              if (additionalPageSyncRequired) {
-                tablesToPage |= helper.tableFlag;
-              }
+            if (additionalPageSyncRequired) {
+              tablesToPage |= helper.tableFlag;
             }
           }
         }
+      }
 
-        if (!isProcessed) {
-          // in the SQL stored procedures that process the data, sometimes we run across an error
-          // (e.g. such as an invalid access token). This data will contain an arbitrary 'errorId'
-          // field that serves as a flag that an error has occurred. When this happens, put the
-          // error information into the adHocData variable and return that to the caller.
-          if (ms.startsWith(r'[{"errorId"')) {
+      if (!isProcessed) {
+        if (ms.startsWith(r'[{"errorId"')) {
             // final List<dynamic> errorItems = jsonDecode(ms) as List<dynamic>;
             // if (errorItems.isNotEmpty) {
             //   adHocData = errorItems;
@@ -429,7 +402,6 @@ class BaseService<TDomain> {
           }
         }
       }
-    }
 
     return tablesToPage;
   }
